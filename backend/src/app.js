@@ -4,6 +4,9 @@ require("dotenv").config();
 
 const pool = require("./config/db");
 
+const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+
 const app = express();
 
 app.use(cors());
@@ -30,6 +33,17 @@ app.get("/api/test-db", async (req, res) => {
       message: "Database connection failed"
     });
   }
+});
+
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    message: "Server error"
+  });
 });
 
 module.exports = app;
