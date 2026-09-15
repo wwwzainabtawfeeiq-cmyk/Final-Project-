@@ -184,3 +184,70 @@ INSERT INTO categories (name, description) VALUES
 ('Fish', 'Fish and seafood dishes'),
 ('Pastries', 'Homemade pastries and baked food'),
 ('Desserts', 'Homemade Iraqi and international desserts');
+
+-- =========================================
+-- CART & ORDER EXTENSIONS
+-- Added by: [Your Name]
+-- =========================================
+
+-- Carts
+CREATE TABLE carts (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_cart_customer
+        FOREIGN KEY (customer_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+-- Cart Items
+CREATE TABLE cart_items (
+    id SERIAL PRIMARY KEY,
+    cart_id INTEGER NOT NULL,
+    meal_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_cart_item_cart
+        FOREIGN KEY (cart_id)
+        REFERENCES carts(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_cart_item_meal
+        FOREIGN KEY (meal_id)
+        REFERENCES meals(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_cart_meal
+        UNIQUE (cart_id, meal_id)
+);
+
+-- Order Status History
+CREATE TABLE order_status_history (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER NOT NULL,
+    status VARCHAR(30) NOT NULL,
+    changed_by INTEGER,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_history_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_history_user
+        FOREIGN KEY (changed_by)
+        REFERENCES users(id)
+        ON DELETE SET NULL
+);
+
+-- Add chef_id and notes to orders table
+ALTER TABLE orders
+ADD COLUMN chef_id INTEGER REFERENCES users(id) ON DELETE RESTRICT;
+
+ALTER TABLE orders
+ADD COLUMN notes TEXT;
