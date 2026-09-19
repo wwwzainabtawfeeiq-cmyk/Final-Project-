@@ -1,8 +1,3 @@
--- =========================================
--- BasraFlavor Database Schema
--- =========================================
-
--- Users
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -13,7 +8,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Cook Profiles
 CREATE TABLE cook_profiles (
     id SERIAL PRIMARY KEY,
     user_id INTEGER UNIQUE NOT NULL,
@@ -29,7 +23,6 @@ CREATE TABLE cook_profiles (
         ON DELETE CASCADE
 );
 
--- Categories
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
@@ -37,7 +30,6 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Meals
 CREATE TABLE meals (
     id SERIAL PRIMARY KEY,
     cook_id INTEGER NOT NULL,
@@ -62,7 +54,6 @@ CREATE TABLE meals (
         ON DELETE SET NULL
 );
 
--- Addresses
 CREATE TABLE addresses (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -77,7 +68,6 @@ CREATE TABLE addresses (
         ON DELETE CASCADE
 );
 
--- Orders
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL,
@@ -117,7 +107,6 @@ CREATE TABLE orders (
         ON DELETE SET NULL
 );
 
--- Order Items
 CREATE TABLE order_items (
     id SERIAL PRIMARY KEY,
     order_id INTEGER NOT NULL,
@@ -136,7 +125,6 @@ CREATE TABLE order_items (
         ON DELETE RESTRICT
 );
 
--- Reviews
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL,
@@ -162,7 +150,6 @@ CREATE TABLE reviews (
         ON DELETE CASCADE
 );
 
--- Favorites
 CREATE TABLE favorites (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL,
@@ -183,11 +170,6 @@ CREATE TABLE favorites (
         UNIQUE (customer_id, meal_id)
 );
 
--- =========================================
--- CART & ORDER EXTENSIONS
--- =========================================
-
--- Carts
 CREATE TABLE carts (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER UNIQUE NOT NULL,
@@ -200,7 +182,6 @@ CREATE TABLE carts (
         ON DELETE CASCADE
 );
 
--- Cart Items
 CREATE TABLE cart_items (
     id SERIAL PRIMARY KEY,
     cart_id INTEGER NOT NULL,
@@ -222,7 +203,6 @@ CREATE TABLE cart_items (
         UNIQUE (cart_id, meal_id)
 );
 
--- Order Status History
 CREATE TABLE order_status_history (
     id SERIAL PRIMARY KEY,
     order_id INTEGER NOT NULL,
@@ -242,8 +222,6 @@ CREATE TABLE order_status_history (
         ON DELETE SET NULL
 );
 
--- NOTIFICATIONS EXTENSION
-
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -261,8 +239,6 @@ CREATE TABLE notifications (
         ON DELETE CASCADE
 );
 
--- INDEXES
-
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_role ON users(role);
 CREATE INDEX idx_meals_cook ON meals(cook_id);
@@ -279,8 +255,6 @@ CREATE INDEX idx_order_status_history_order ON order_status_history(order_id);
 CREATE INDEX idx_notifications_user ON notifications(user_id);
 CREATE INDEX idx_notifications_unread ON notifications(user_id, is_read);
 
--- SEED DATA
-
 INSERT INTO categories (name, description) VALUES
 ('Dolma', 'Iraqi dolma and stuffed vegetables'),
 ('Rice & Mahashi', 'Rice dishes and stuffed vegetables'),
@@ -289,4 +263,3 @@ INSERT INTO categories (name, description) VALUES
 ('Pastries', 'Homemade pastries and baked food'),
 ('Desserts', 'Homemade Iraqi and international desserts')
 ON CONFLICT (name) DO NOTHING;
-
