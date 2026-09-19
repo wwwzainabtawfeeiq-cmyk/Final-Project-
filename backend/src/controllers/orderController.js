@@ -93,8 +93,8 @@ const placeOrder = async (req, res) => {
 
         await createNotification(
             chefId,
-            'طلب جديد',
-            `لديك طلب جديد #${order.id} بقيمة ${total} دينار`,
+            'New Order',
+            `You have a new order #${order.id} worth ${total} IQD`,
             'order',
             order.id
         );
@@ -229,8 +229,8 @@ const cancelOrder = async (req, res) => {
 
         await createNotification(
             order.chef_id,
-            'تم إلغاء الطلب',
-            `تم إلغاء الطلب #${order.id} من قبل الزبون`,
+            'Order Cancelled',
+            `Order #${order.id} was cancelled by the customer`,
             'order',
             order.id
         );
@@ -297,19 +297,19 @@ const updateOrderStatus = async (req, res) => {
         );
 
         const statusMessages = {
-            'accepted': 'تم قبول طلبك',
-            'rejected': 'تم رفض طلبك',
-            'preparing': 'طلبك قيد التحضير',
-            'ready': 'طلبك جاهز',
-            'delivered': 'تم توصيل طلبك',
-            'cancelled': 'تم إلغاء طلبك'
+            'accepted': 'Your order has been accepted',
+            'rejected': 'Your order has been rejected',
+            'preparing': 'Your order is being prepared',
+            'ready': 'Your order is ready',
+            'delivered': 'Your order has been delivered',
+            'cancelled': 'Your order has been cancelled'
         };
 
         if (statusMessages[status]) {
             await createNotification(
                 order.customer_id,
-                'تحديث حالة الطلب',
-                `${statusMessages[status]} - الطلب #${order.id}`,
+                'Order Status Update',
+                `${statusMessages[status]} - Order #${order.id}`,
                 'order',
                 order.id
             );
