@@ -6,6 +6,8 @@ const pool = require("./config/db");
 
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes");
 
 const app = express();
 
@@ -37,6 +39,8 @@ app.get("/api/test-db", async (req, res) => {
 
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/favorites", favoriteRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
