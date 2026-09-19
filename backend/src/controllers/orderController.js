@@ -1,8 +1,6 @@
 const pool = require('../config/db');
+const { createNotification } = require('./notificationController');
 
-// @desc    Place order from cart
-// @route   POST /api/orders
-// @access  Private (Customer)
 const placeOrder = async (req, res) => {
     const client = await pool.connect();
 
@@ -12,7 +10,6 @@ const placeOrder = async (req, res) => {
         const customerId = req.user.id;
         const { address_id, scheduled_at, notes } = req.body;
 
-        // Get cart items
         const cartResult = await client.query(
             `SELECT 
                 ci.meal_id,
@@ -35,7 +32,6 @@ const placeOrder = async (req, res) => {
 
         const cartItems = cartResult.rows;
 
-        // Verify all available
         for (const item of cartItems) {
             if (!item.is_available) {
                 await client.query('ROLLBACK');
@@ -47,7 +43,6 @@ const placeOrder = async (req, res) => {
             }
         }
 
-        // All items must be from same cook
         const cookIds = [...new Set(cartItems.map(i => i.cook_id))];
         if (cookIds.length > 1) {
             await client.query('ROLLBACK');
@@ -57,7 +52,6 @@ const placeOrder = async (req, res) => {
         const chefId = cookIds[0];
         const total = cartItems.reduce((sum, i) => sum + (parseFloat(i.price) * i.quantity), 0);
 
-        // Create order
         const orderResult = await client.query(
             `INSERT INTO orders 
                 (customer_id, chef_id, address_id, total_amount, status, scheduled_at, notes)
@@ -68,7 +62,6 @@ const placeOrder = async (req, res) => {
 
         const order = orderResult.rows[0];
 
-        // Create order items + reduce quantities
         for (const item of cartItems) {
             await client.query(
                 `INSERT INTO order_items (order_id, meal_id, quantity, price)
@@ -83,14 +76,12 @@ const placeOrder = async (req, res) => {
             );
         }
 
-        // Add status history
         await client.query(
             `INSERT INTO order_status_history (order_id, status, changed_by, notes)
              VALUES ($1, 'pending', $2, 'Order placed')`,
             [order.id, customerId]
         );
 
-        // Clear cart
         await client.query(
             `DELETE FROM cart_items ci
              USING carts c
@@ -99,6 +90,14 @@ const placeOrder = async (req, res) => {
         );
 
         await client.query('COMMIT');
+
+        await createNotification(
+            chefId,
+            'طلب جديد',
+            `لديك طلب جديد #${order.id} بقيمة ${total} دينار`,
+            'order',
+            order.id
+        );
 
         res.status(201).json({
             success: true,
@@ -114,9 +113,6 @@ const placeOrder = async (req, res) => {
     }
 };
 
-// @desc    Get customer's orders
-// @route   GET /api/orders/my-orders
-// @access  Private (Customer)
 const getMyOrders = async (req, res) => {
     try {
         const customerId = req.user.id;
@@ -139,9 +135,6 @@ const getMyOrders = async (req, res) => {
     }
 };
 
-// @desc    Get order by ID
-// @route   GET /api/orders/:id
-// @access  Private
 const getOrderById = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -165,7 +158,6 @@ const getOrderById = async (req, res) => {
 
         const order = orderResult.rows[0];
 
-        // Check permission
         if (userRole === 'customer' && order.customer_id !== userId) {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
@@ -173,7 +165,6 @@ const getOrderById = async (req, res) => {
             return res.status(403).json({ success: false, message: 'Not authorized' });
         }
 
-        // Get items
         const itemsResult = await pool.query(
             `SELECT 
                 oi.*,
@@ -185,7 +176,6 @@ const getOrderById = async (req, res) => {
             [orderId]
         );
 
-        // Get status history
         const historyResult = await pool.query(
             `SELECT * FROM order_status_history
              WHERE order_id = $1
@@ -207,9 +197,6 @@ const getOrderById = async (req, res) => {
     }
 };
 
-// @desc    Cancel order (Customer)
-// @route   PUT /api/orders/:id/cancel
-// @access  Private (Customer)
 const cancelOrder = async (req, res) => {
     try {
         const customerId = req.user.id;
@@ -232,10 +219,20 @@ const cancelOrder = async (req, res) => {
             });
         }
 
+        const order = result.rows[0];
+
         await pool.query(
             `INSERT INTO order_status_history (order_id, status, changed_by, notes)
              VALUES ($1, 'cancelled', $2, 'Cancelled by customer')`,
             [orderId, customerId]
+        );
+
+        await createNotification(
+            order.chef_id,
+            'تم إلغاء الطلب',
+            `تم إلغاء الطلب #${order.id} من قبل الزبون`,
+            'order',
+            order.id
         );
 
         res.json({ success: true, message: 'Order cancelled' });
@@ -245,9 +242,6 @@ const cancelOrder = async (req, res) => {
     }
 };
 
-// @desc    Get cook's orders
-// @route   GET /api/orders/cook-orders
-// @access  Private (Cook)
 const getCookOrders = async (req, res) => {
     try {
         const cookId = req.user.id;
@@ -271,9 +265,6 @@ const getCookOrders = async (req, res) => {
     }
 };
 
-// @desc    Update order status (Cook)
-// @route   PUT /api/orders/:id/status
-// @access  Private (Cook)
 const updateOrderStatus = async (req, res) => {
     try {
         const cookId = req.user.id;
@@ -297,11 +288,32 @@ const updateOrderStatus = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Order not found' });
         }
 
+        const order = result.rows[0];
+
         await pool.query(
             `INSERT INTO order_status_history (order_id, status, changed_by, notes)
              VALUES ($1, $2, $3, $4)`,
             [orderId, status, cookId, `Status: ${status}`]
         );
+
+        const statusMessages = {
+            'accepted': 'تم قبول طلبك',
+            'rejected': 'تم رفض طلبك',
+            'preparing': 'طلبك قيد التحضير',
+            'ready': 'طلبك جاهز',
+            'delivered': 'تم توصيل طلبك',
+            'cancelled': 'تم إلغاء طلبك'
+        };
+
+        if (statusMessages[status]) {
+            await createNotification(
+                order.customer_id,
+                'تحديث حالة الطلب',
+                `${statusMessages[status]} - الطلب #${order.id}`,
+                'order',
+                order.id
+            );
+        }
 
         res.json({ success: true, message: 'Status updated' });
     } catch (error) {
