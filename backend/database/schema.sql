@@ -81,6 +81,7 @@ CREATE TABLE addresses (
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL,
+    chef_id INTEGER,
     address_id INTEGER,
     total_amount DECIMAL(10,2) NOT NULL DEFAULT 0
         CHECK (total_amount >= 0),
@@ -97,12 +98,18 @@ CREATE TABLE orders (
             )
         ),
     scheduled_at TIMESTAMP,
+    notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_order_customer
         FOREIGN KEY (customer_id)
         REFERENCES users(id)
         ON DELETE CASCADE,
+
+    CONSTRAINT fk_order_chef
+        FOREIGN KEY (chef_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_order_address
         FOREIGN KEY (address_id)
@@ -176,18 +183,8 @@ CREATE TABLE favorites (
         UNIQUE (customer_id, meal_id)
 );
 
--- Categories seed data
-INSERT INTO categories (name, description) VALUES
-('Dolma', 'Iraqi dolma and stuffed vegetables'),
-('Rice & Mahashi', 'Rice dishes and stuffed vegetables'),
-('Tabees', 'Traditional Iraqi oven dishes'),
-('Fish', 'Fish and seafood dishes'),
-('Pastries', 'Homemade pastries and baked food'),
-('Desserts', 'Homemade Iraqi and international desserts');
-
 -- =========================================
 -- CART & ORDER EXTENSIONS
--- Added by: [Your Name]
 -- =========================================
 
 -- Carts
@@ -245,9 +242,51 @@ CREATE TABLE order_status_history (
         ON DELETE SET NULL
 );
 
--- Add chef_id and notes to orders table
-ALTER TABLE orders
-ADD COLUMN chef_id INTEGER REFERENCES users(id) ON DELETE RESTRICT;
+-- NOTIFICATIONS EXTENSION
 
-ALTER TABLE orders
-ADD COLUMN notes TEXT;
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    message TEXT NOT NULL,
+    type VARCHAR(50) DEFAULT 'general'
+        CHECK (type IN ('order', 'review', 'system', 'general')),
+    related_id INTEGER,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_notification_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
+
+-- INDEXES
+
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_meals_cook ON meals(cook_id);
+CREATE INDEX idx_meals_category ON meals(category_id);
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+CREATE INDEX idx_orders_chef ON orders(chef_id);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_reviews_cook ON reviews(cook_id);
+CREATE INDEX idx_favorites_customer ON favorites(customer_id);
+CREATE INDEX idx_carts_customer ON carts(customer_id);
+CREATE INDEX idx_cart_items_cart ON cart_items(cart_id);
+CREATE INDEX idx_order_status_history_order ON order_status_history(order_id);
+CREATE INDEX idx_notifications_user ON notifications(user_id);
+CREATE INDEX idx_notifications_unread ON notifications(user_id, is_read);
+
+-- SEED DATA
+
+INSERT INTO categories (name, description) VALUES
+('Dolma', 'Iraqi dolma and stuffed vegetables'),
+('Rice & Mahashi', 'Rice dishes and stuffed vegetables'),
+('Tabees', 'Traditional Iraqi oven dishes'),
+('Fish', 'Fish and seafood dishes'),
+('Pastries', 'Homemade pastries and baked food'),
+('Desserts', 'Homemade Iraqi and international desserts')
+ON CONFLICT (name) DO NOTHING;
+
