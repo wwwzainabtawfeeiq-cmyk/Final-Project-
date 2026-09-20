@@ -3,6 +3,14 @@ const cors = require("cors");
 require("dotenv").config();
 
 const pool = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
+const cookRoutes = require("./routes/cookRoutes");
+const mealRoutes = require("./routes/mealRoutes");
+
+const {
+    authenticateToken,
+    authorizeRoles
+} = require("./middleware/authMiddleware");
 
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
@@ -15,27 +23,45 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "BasraFlavor API is running"
-  });
+    res.json({
+        message: "BasraFlavor API is running"
+    });
 });
 
 app.get("/api/test-db", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT NOW()");
+    try {
+        const result = await pool.query("SELECT NOW()");
 
-    res.json({
-      message: "Database connected successfully",
-      time: result.rows[0].now
-    });
-  } catch (error) {
-    console.error(error);
+        res.json({
+            message: "Database connected successfully",
+            time: result.rows[0].now
+        });
+    } catch (error) {
+        console.error(error);
 
-    res.status(500).json({
-      message: "Database connection failed"
-    });
-  }
+        res.status(500).json({
+            message: "Database connection failed"
+        });
+    }
 });
+
+app.use("/api/auth", authRoutes);
+
+app.use("/api/cook", cookRoutes);
+
+app.use("/api/meals", mealRoutes);
+
+app.get(
+    "/api/test-cook",
+    authenticateToken,
+    authorizeRoles("cook"),
+    (req, res) => {
+        res.json({
+            message: "Cook route accessed successfully",
+            user: req.user
+        });
+    }
+);
 
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
