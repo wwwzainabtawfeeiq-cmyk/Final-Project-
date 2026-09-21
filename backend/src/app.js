@@ -6,16 +6,15 @@ const pool = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const cookRoutes = require("./routes/cookRoutes");
 const mealRoutes = require("./routes/mealRoutes");
+const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes");
 
 const {
     authenticateToken,
     authorizeRoles
 } = require("./middleware/authMiddleware");
-
-const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-const notificationRoutes = require("./routes/notificationRoutes");
-const favoriteRoutes = require("./routes/favoriteRoutes");
 
 const app = express();
 
@@ -46,10 +45,12 @@ app.get("/api/test-db", async (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
-
 app.use("/api/cook", cookRoutes);
-
 app.use("/api/meals", mealRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/favorites", favoriteRoutes);
 
 app.get(
     "/api/test-cook",
@@ -63,17 +64,12 @@ app.get(
     }
 );
 
-app.use("/api/cart", cartRoutes);
-app.use("/api/orders", orderRoutes);
-app.use("/api/notifications", notificationRoutes);
-app.use("/api/favorites", favoriteRoutes);
-
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: "Server error"
-  });
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        message: "Server error"
+    });
 });
 
 module.exports = app;
