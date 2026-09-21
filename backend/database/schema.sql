@@ -14,6 +14,7 @@ CREATE TABLE cook_profiles (
     bio TEXT,
     phone VARCHAR(30),
     address TEXT,
+    rating DECIMAL(3,2) DEFAULT 0.00,
     is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -127,12 +128,19 @@ CREATE TABLE order_items (
 
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
+    order_id INTEGER,
     customer_id INTEGER NOT NULL,
     meal_id INTEGER,
     cook_id INTEGER,
     rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_review_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(id)
+        ON DELETE SET NULL,
 
     CONSTRAINT fk_review_customer
         FOREIGN KEY (customer_id)
@@ -147,7 +155,10 @@ CREATE TABLE reviews (
     CONSTRAINT fk_review_cook
         FOREIGN KEY (cook_id)
         REFERENCES users(id)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT unique_review_per_order_meal
+        UNIQUE (order_id, meal_id)
 );
 
 CREATE TABLE favorites (
@@ -247,7 +258,9 @@ CREATE INDEX idx_orders_customer ON orders(customer_id);
 CREATE INDEX idx_orders_chef ON orders(chef_id);
 CREATE INDEX idx_orders_status ON orders(status);
 CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_reviews_meal ON reviews(meal_id);
 CREATE INDEX idx_reviews_cook ON reviews(cook_id);
+CREATE INDEX idx_reviews_customer ON reviews(customer_id);
 CREATE INDEX idx_favorites_customer ON favorites(customer_id);
 CREATE INDEX idx_carts_customer ON carts(customer_id);
 CREATE INDEX idx_cart_items_cart ON cart_items(cart_id);
