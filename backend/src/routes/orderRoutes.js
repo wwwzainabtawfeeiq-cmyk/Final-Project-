@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const {
     placeOrder,
+    placeCustomOrder,
+    sendCustomOrderQuote,
+    getScheduledOrders,
+    getCustomOrderDetails,
     getMyOrders,
     getOrderById,
     cancelOrder,
@@ -9,21 +13,24 @@ const {
     updateOrderStatus
 } = require('../controllers/orderController');
 
-const { protect, authorize } = require('../middleware/authMiddleware');
+const {
+    authenticateToken,
+    authorizeRoles
+} = require('../middleware/authMiddleware');
 
-// All routes require authentication
-router.use(protect);
+router.use(authenticateToken);
 
-// Customer routes
-router.post('/', authorize('customer'), placeOrder);
-router.get('/my-orders', authorize('customer'), getMyOrders);
-router.put('/:id/cancel', authorize('customer'), cancelOrder);
+router.post('/', authorizeRoles('customer'), placeOrder);
+router.post('/custom', authorizeRoles('customer'), placeCustomOrder);
+router.get('/my-orders', authorizeRoles('customer'), getMyOrders);
+router.put('/:id/cancel', authorizeRoles('customer'), cancelOrder);
 
-// Cook routes
-router.get('/cook-orders', authorize('cook'), getCookOrders);
-router.put('/:id/status', authorize('cook'), updateOrderStatus);
+router.get('/cook-orders', authorizeRoles('cook'), getCookOrders);
+router.put('/:id/status', authorizeRoles('cook'), updateOrderStatus);
+router.put('/:id/quote', authorizeRoles('cook'), sendCustomOrderQuote);
 
-// Shared (Customer or Cook)
+router.get('/scheduled', getScheduledOrders);
+router.get('/custom/:id', getCustomOrderDetails);
 router.get('/:id', getOrderById);
 
 module.exports = router;
