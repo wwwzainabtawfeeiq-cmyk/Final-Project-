@@ -74,6 +74,8 @@ CREATE TABLE orders (
     customer_id INTEGER NOT NULL,
     chef_id INTEGER,
     address_id INTEGER,
+    order_type VARCHAR(30) NOT NULL DEFAULT 'daily'
+        CHECK (order_type IN ('daily', 'scheduled', 'custom')),
     total_amount DECIMAL(10,2) NOT NULL DEFAULT 0
         CHECK (total_amount >= 0),
     status VARCHAR(30) NOT NULL DEFAULT 'pending'
@@ -85,7 +87,8 @@ CREATE TABLE orders (
                 'preparing',
                 'ready',
                 'delivered',
-                'cancelled'
+                'cancelled',
+                'scheduled'
             )
         ),
     scheduled_at TIMESTAMP,
@@ -124,6 +127,21 @@ CREATE TABLE order_items (
         FOREIGN KEY (meal_id)
         REFERENCES meals(id)
         ON DELETE RESTRICT
+);
+
+CREATE TABLE custom_order_requests (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER UNIQUE NOT NULL,
+    description TEXT NOT NULL,
+    budget DECIMAL(10,2),
+    reference_image_url TEXT,
+    special_instructions TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_custom_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE reviews (
@@ -257,7 +275,10 @@ CREATE INDEX idx_meals_category ON meals(category_id);
 CREATE INDEX idx_orders_customer ON orders(customer_id);
 CREATE INDEX idx_orders_chef ON orders(chef_id);
 CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_orders_type ON orders(order_type);
+CREATE INDEX idx_orders_scheduled ON orders(scheduled_at);
 CREATE INDEX idx_order_items_order ON order_items(order_id);
+CREATE INDEX idx_custom_order_requests_order ON custom_order_requests(order_id);
 CREATE INDEX idx_reviews_meal ON reviews(meal_id);
 CREATE INDEX idx_reviews_cook ON reviews(cook_id);
 CREATE INDEX idx_reviews_customer ON reviews(customer_id);
