@@ -10,6 +10,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
+const addressRoutes = require("./routes/addressRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 
 const {
@@ -52,6 +53,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/favorites", favoriteRoutes);
+app.use("/api/addresses", addressRoutes);
 app.use("/api/reviews", reviewRoutes);
 
 app.get(
