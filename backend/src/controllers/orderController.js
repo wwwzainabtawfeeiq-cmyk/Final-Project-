@@ -51,13 +51,15 @@ const placeOrder = async (req, res) => {
 
         const chefId = cookIds[0];
         const total = cartItems.reduce((sum, i) => sum + (parseFloat(i.price) * i.quantity), 0);
+        const orderType = scheduled_at ? 'scheduled' : 'daily';
+        const initialStatus = scheduled_at ? 'scheduled' : 'pending';
 
         const orderResult = await client.query(
             `INSERT INTO orders 
-                (customer_id, chef_id, address_id, total_amount, status, scheduled_at, notes)
-             VALUES ($1, $2, $3, $4, 'pending', $5, $6)
+                (customer_id, chef_id, address_id, order_type, total_amount, status, scheduled_at, notes)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
              RETURNING *`,
-            [customerId, chefId, address_id, total, scheduled_at, notes]
+            [customerId, chefId, address_id, orderType, total, initialStatus, scheduled_at, notes]
         );
 
         const order = orderResult.rows[0];
@@ -78,8 +80,8 @@ const placeOrder = async (req, res) => {
 
         await client.query(
             `INSERT INTO order_status_history (order_id, status, changed_by, notes)
-             VALUES ($1, 'pending', $2, 'Order placed')`,
-            [order.id, customerId]
+             VALUES ($1, $2, $3, $4)`,
+            [order.id, initialStatus, customerId, `Order placed as ${orderType}`]
         );
 
         await client.query(
@@ -93,8 +95,10 @@ const placeOrder = async (req, res) => {
 
         await createNotification(
             chefId,
-            'New Order',
-            `You have a new order #${order.id} worth ${total} IQD`,
+            scheduled_at ? 'New Scheduled Order' : 'New Order',
+            scheduled_at
+                ? `You have a new scheduled order #${order.id} for ${scheduled_at}`
+                : `You have a new order #${order.id} worth ${total} IQD`,
             'order',
             order.id
         );
@@ -110,6 +114,226 @@ const placeOrder = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     } finally {
         client.release();
+    }
+};
+
+const placeCustomOrder = async (req, res) => {
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        const customerId = req.user.id;
+        const {
+            chef_id,
+            address_id,
+            description,
+            budget,
+            reference_image_url,
+            special_instructions,
+            scheduled_at
+        } = req.body;
+
+        if (!chef_id || !description) {
+            await client.query('ROLLBACK');
+            return res.status(400).json({
+                success: false,
+                message: 'chef_id and description are required'
+            });
+        }
+
+        const chefCheck = await client.query(
+            'SELECT id FROM users WHERE id = $1 AND role = $2',
+            [chef_id, 'cook']
+        );
+
+        if (chefCheck.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ success: false, message: 'Chef not found' });
+        }
+
+        const orderResult = await client.query(
+            `INSERT INTO orders 
+                (customer_id, chef_id, address_id, order_type, total_amount, status, scheduled_at, notes)
+             VALUES ($1, $2, $3, 'custom', 0, 'pending', $4, $5)
+             RETURNING *`,
+            [customerId, chef_id, address_id, scheduled_at, special_instructions]
+        );
+
+        const order = orderResult.rows[0];
+
+        await client.query(
+            `INSERT INTO custom_order_requests 
+                (order_id, description, budget, reference_image_url, special_instructions)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [order.id, description, budget, reference_image_url, special_instructions]
+        );
+
+        await client.query(
+            `INSERT INTO order_status_history (order_id, status, changed_by, notes)
+             VALUES ($1, 'pending', $2, 'Custom order request placed')`,
+            [order.id, customerId]
+        );
+
+        await client.query('COMMIT');
+
+        await createNotification(
+            chef_id,
+            'New Custom Order Request',
+            `You have a new custom order request #${order.id}`,
+            'order',
+            order.id
+        );
+
+        res.status(201).json({
+            success: true,
+            message: 'Custom order request placed successfully',
+            data: order
+        });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Place custom order error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    } finally {
+        client.release();
+    }
+};
+
+const sendCustomOrderQuote = async (req, res) => {
+    try {
+        const cookId = req.user.id;
+        const orderId = req.params.id;
+        const { proposed_price } = req.body;
+
+        if (!proposed_price || proposed_price <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid proposed price' });
+        }
+
+        const orderCheck = await pool.query(
+            `SELECT o.*, cor.id AS custom_request_id
+             FROM orders o
+             JOIN custom_order_requests cor ON cor.order_id = o.id
+             WHERE o.id = $1 AND o.chef_id = $2 AND o.order_type = 'custom'`,
+            [orderId, cookId]
+        );
+
+        if (orderCheck.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Custom order not found' });
+        }
+
+        const order = orderCheck.rows[0];
+
+        const result = await pool.query(
+            `UPDATE orders
+             SET total_amount = $1, status = 'accepted'
+             WHERE id = $2
+             RETURNING *`,
+            [proposed_price, orderId]
+        );
+
+        await pool.query(
+            `INSERT INTO order_status_history (order_id, status, changed_by, notes)
+             VALUES ($1, 'accepted', $2, $3)`,
+            [orderId, cookId, `Quote sent: ${proposed_price} IQD`]
+        );
+
+        await createNotification(
+            order.customer_id,
+            'Custom Order Quote',
+            `Your custom order #${order.id} quote is ${proposed_price} IQD`,
+            'order',
+            order.id
+        );
+
+        res.json({
+            success: true,
+            message: 'Quote sent successfully',
+            data: result.rows[0]
+        });
+    } catch (error) {
+        console.error('Send custom order quote error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+const getScheduledOrders = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const userRole = req.user.role;
+
+        let query = `
+            SELECT 
+                o.*,
+                u.name AS other_party_name
+            FROM orders o
+            JOIN users u ON u.id = CASE 
+                WHEN $1 = 'customer' THEN o.chef_id
+                ELSE o.customer_id
+            END
+            WHERE o.order_type IN ('scheduled', 'custom')
+              AND o.status IN ('scheduled', 'pending', 'accepted', 'preparing')
+        `;
+
+        const params = [userRole];
+
+        if (userRole === 'customer') {
+            query += ` AND o.customer_id = $2`;
+            params.push(userId);
+        } else if (userRole === 'cook') {
+            query += ` AND o.chef_id = $2`;
+            params.push(userId);
+        } else {
+            return res.status(403).json({ success: false, message: 'Not authorized' });
+        }
+
+        query += ` ORDER BY o.scheduled_at ASC NULLS LAST, o.created_at DESC`;
+
+        const result = await pool.query(query, params);
+
+        res.json({ success: true, data: result.rows });
+    } catch (error) {
+        console.error('Get scheduled orders error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+const getCustomOrderDetails = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        const userId = req.user.id;
+        const userRole = req.user.role;
+
+        const result = await pool.query(
+            `SELECT 
+                o.*,
+                cor.description,
+                cor.budget,
+                cor.reference_image_url,
+                cor.special_instructions,
+                cor.created_at AS request_created_at
+            FROM orders o
+            JOIN custom_order_requests cor ON cor.order_id = o.id
+            WHERE o.id = $1`,
+            [orderId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ success: false, message: 'Custom order not found' });
+        }
+
+        const order = result.rows[0];
+
+        if (userRole === 'customer' && order.customer_id !== userId) {
+            return res.status(403).json({ success: false, message: 'Not authorized' });
+        }
+        if (userRole === 'cook' && order.chef_id !== userId) {
+            return res.status(403).json({ success: false, message: 'Not authorized' });
+        }
+
+        res.json({ success: true, data: order });
+    } catch (error) {
+        console.error('Get custom order details error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
@@ -207,7 +431,7 @@ const cancelOrder = async (req, res) => {
              SET status = 'cancelled'
              WHERE id = $1 
                AND customer_id = $2
-               AND status IN ('pending', 'accepted')
+               AND status IN ('pending', 'accepted', 'scheduled')
              RETURNING *`,
             [orderId, customerId]
         );
@@ -324,6 +548,10 @@ const updateOrderStatus = async (req, res) => {
 
 module.exports = {
     placeOrder,
+    placeCustomOrder,
+    sendCustomOrderQuote,
+    getScheduledOrders,
+    getCustomOrderDetails,
     getMyOrders,
     getOrderById,
     cancelOrder,
