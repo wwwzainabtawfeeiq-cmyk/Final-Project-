@@ -3,7 +3,7 @@ import { Utensils, Moon, Sun, Sparkles, Calendar, Trophy, HeartHandshake, Heart 
 
 export default function CustomerSubNav({ activeTab, setActiveTab }) {
   const navItems = [
-    { id: 'all', label: 'جميع الوجبات', icon: Utensils },
+    { id: 'all', label: 'جميع النكهات 🌴', icon: Utensils },
     { id: 'night', label: 'Basra Night Food 🌙', icon: Moon },
     { id: 'breakfast', label: 'Breakfast in Basra ☀️', icon: Sun },
     { id: 'flavor-match', label: 'Flavor Match 🎯', icon: Sparkles },
@@ -26,7 +26,7 @@ export default function CustomerSubNav({ activeTab, setActiveTab }) {
               className={`subnav-link ${isActive ? 'active' : ''}`}
               onClick={() => setActiveTab(item.id)}
             >
-              <Icon size={15} />
+              <Icon size={16} />
               <span>{item.label}</span>
             </button>
           );

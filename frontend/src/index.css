@@ -1,25 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --primary: #d97706; /* العنبري البصري Warm Amber */
-  --primary-hover: #b45309;
-  --secondary: #0d9488; /* التيل البصري Deep Basra Teal */
-  --secondary-hover: #0f766e;
-  --accent: #e11d48; /* Crimson spice */
-  --bg-main: #fcfbf9;
+  /* ثيم نكهة البصرة الأصيل (الشناشيل، النخيل، شط العرب، التمر البرحي) */
+  --primary-brown: #5c3a21;        /* خشب الشناشيل الداكن */
+  --primary-brown-hover: #462b18;
+  --secondary-green: #2d5a27;      /* أخضر بساتين ونخيل البصرة */
+  --secondary-green-hover: #1e3f1b;
+  --river-blue: #0e6ba8;           /* مياه شط العرب والجسر الإيطالي */
+  --river-blue-hover: #0a4d79;
+  --date-gold: #d4a373;            /* ذهبي التمر البرحي البصري */
+  --amber-accent: #e9c46a;         /* عنصر التمييز الدافيء */
+  
+  --bg-main: #faf6ee;              /* خلفية دافئة بلون الورق التراثي والمعمار البصري */
   --bg-card: #ffffff;
-  --text-main: #1f2937;
-  --text-muted: #6b7280;
-  --border-color: #e5e7eb;
-  --night-bg: #0f172a;
-  --night-card: #1e293b;
-  --night-text: #f8fafc;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 10px 25px rgba(0,0,0,0.12);
+  --text-main: #2b1d12;            /* بني داكن مائل للأسود للقراءة */
+  --text-muted: #6e5849;
+  --border-color: #e6d5c3;         /* حدود محفورة بلون الخشب الفاتح */
+  
+  --shanasheel-pattern: radial-gradient(#d4a373 0.75px, transparent 0.75px);
+  
+  --shadow-sm: 0 2px 4px rgba(92, 58, 33, 0.05);
+  --shadow-md: 0 6px 16px rgba(92, 58, 33, 0.08);
+  --shadow-lg: 0 12px 30px rgba(92, 58, 33, 0.12);
+  
   --radius-sm: 8px;
   --radius-md: 14px;
-  --radius-lg: 20px;
+  --radius-lg: 22px;
   --radius-full: 9999px;
 }
 
@@ -38,6 +44,8 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  background-image: var(--shanasheel-pattern);
+  background-size: 24px 24px;
 }
 
 a {
@@ -57,28 +65,28 @@ input, select, textarea {
   direction: rtl;
 }
 
-/* Custom scrollbars */
+/* Custom Basra Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f4eae0;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--primary-brown);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--primary-brown-hover);
 }
 
-/* Utility Animations */
+/* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-out forwards;
+  animation: fadeIn 0.35s ease-out forwards;
 }

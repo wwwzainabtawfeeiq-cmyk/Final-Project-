@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCart } from '../../context/CartContext';
-import { ShoppingBag, Moon, Sun } from 'lucide-react';
+import { ChefHat, ShoppingBag, ShieldCheck, Moon, Sun } from 'lucide-react';
 
 export default function TopPortalBar() {
   const { activePortal, setActivePortal } = useCart();
@@ -11,12 +11,12 @@ export default function TopPortalBar() {
     <div className="top-portal-bar">
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
         {isNight ? (
-          <span style={{ color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Moon size={14} /> البصرة ليلاً (Basra Night Food نشط)
+          <span style={{ color: '#e9c46a', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
+            <Moon size={14} color="#e9c46a" /> البصرة ليلاً 🌙 (Basra Night Food نشط)
           </span>
         ) : (
-          <span style={{ color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Sun size={14} /> إفطار البصرة (Breakfast in Basra)
+          <span style={{ color: '#e9c46a', display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700 }}>
+            <Sun size={14} color="#e9c46a" /> إفطار البصرة ☀️ (Breakfast in Basra نشط)
           </span>
         )}
       </div>
@@ -26,7 +26,19 @@ export default function TopPortalBar() {
           className={`portal-btn ${activePortal === 'customer' ? 'active-customer' : ''}`}
           onClick={() => setActivePortal('customer')}
         >
-          <ShoppingBag size={13} style={{ marginLeft: 4 }} /> واجهة الزبون (Customer)
+          <ShoppingBag size={13} style={{ marginLeft: 4 }} /> واجهة الزبون
+        </button>
+        <button
+          className={`portal-btn ${activePortal === 'cook' ? 'active-cook' : ''}`}
+          onClick={() => setActivePortal('cook')}
+        >
+          <ChefHat size={13} style={{ marginLeft: 4 }} /> واجهة الطباخ
+        </button>
+        <button
+          className={`portal-btn ${activePortal === 'admin' ? 'active-admin' : ''}`}
+          onClick={() => setActivePortal('admin')}
+        >
+          <ShieldCheck size={13} style={{ marginLeft: 4 }} /> واجهة الأدمن
         </button>
       </div>
     </div>

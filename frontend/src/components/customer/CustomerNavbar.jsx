@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Search, MapPin, ShoppingBag, Mic, Sparkles, Heart } from 'lucide-react';
 import VoiceOrderModal from './VoiceOrderModal';
+import logoImg from '../../assets/logo.jpg';
 
 export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, onOpenFlavorMatch }) {
   const { cartCount, favorites } = useCart();
@@ -11,15 +12,23 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
     <>
       <header className="customer-navbar">
         <div className="navbar-inner">
-          {/* Logo */}
-          <div className="brand-logo">
-            🍲 نكهة <span>البصرة</span>
+          {/* Official New Logo & Brand Title */}
+          <div className="brand-logo" style={{ cursor: 'pointer' }}>
+            <img
+              src={logoImg}
+              alt="شعار نكهة البصرة"
+              style={{ height: 48, borderRadius: 10, objectFit: 'contain', border: '1px solid #e6d5c3' }}
+            />
+            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
+              <span style={{ fontSize: '1.25rem', fontWeight: 900, color: '#5c3a21' }}>نكهة</span>
+              <span style={{ fontSize: '1.1rem', fontWeight: 900, color: '#2d5a27' }}>البصرة</span>
+            </div>
           </div>
 
           {/* Location Picker */}
           <div className="location-picker">
-            <MapPin size={16} color="#d97706" />
-            <span>البصرة، الجزائر</span>
+            <MapPin size={16} color="#5c3a21" />
+            <span>البصرة، قرب شط العرب</span>
           </div>
 
           {/* Search Box */}
@@ -28,7 +37,7 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
             <input
               type="text"
               className="search-input"
-              placeholder="ابحث عن مسقوف، مطبق، قيمر سدة، أو اسم الطباخ..."
+              placeholder="ابحث عن مسقوف، مطبق زبيدي، قيمر سدة، أو نكهة بصرية..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -43,7 +52,7 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
 
             {/* Voice-First Order Button */}
             <button className="nav-btn" onClick={() => setIsVoiceModalOpen(true)}>
-              <Mic size={16} color="#d97706" /> طلب صوتي
+              <Mic size={16} color="#5c3a21" /> طلب صوتي
             </button>
 
             {/* Favorites Count */}

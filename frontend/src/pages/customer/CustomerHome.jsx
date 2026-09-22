@@ -1,7 +1,7 @@
 import React from 'react';
-import { MOCK_MEALS } from '../../mockData/data';
+import { MOCK_MEALS, BASRA_IMAGES } from '../../mockData/data';
 import MealCard from '../../components/customer/MealCard';
-import { Sparkles, Moon, Sun, Utensils } from 'lucide-react';
+import { Sparkles, Moon, Sun, Utensils, Compass, Waves } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 export default function CustomerHome({ searchTerm, activeCategory, setActiveCategory, onOpenFlavorMatch }) {
@@ -10,13 +10,13 @@ export default function CustomerHome({ searchTerm, activeCategory, setActiveCate
   const isNight = currentHour >= 18 || currentHour < 5;
 
   const categories = [
-    { id: 'all', label: 'الكل' },
-    { id: 'مأكولات بحرية', label: 'مأكولات بحرية 🐟' },
-    { id: 'أطباق رئيسية', label: 'أطباق رئيسية 🍲' },
-    { id: 'إفطار بصري', label: 'إفطار بصري ☀️' },
-    { id: 'أكلات ليلية', label: 'أكلات ليلية 🌙' },
-    { id: 'مسقوف وبحري', label: 'مسقوف وبحري 🪵' },
-    { id: 'إنقاذ الطعام', label: 'إنقاذ الطعام 💚' }
+    { id: 'all', label: 'جميع النكهات 🌴' },
+    { id: 'مأكولات بحرية', label: 'سمك ومأكولات بحرية 🐟' },
+    { id: 'أطباق رئيسية', label: 'مطابخ بصرية عريقة 🍲' },
+    { id: 'إفطار بصري', label: 'إفطار وقيمر السدة ☀️' },
+    { id: 'أكلات ليلية', label: 'وجبات ليلية فوق الجسر 🌙' },
+    { id: 'مسقوف وبحري', label: 'مسقوف شط العرب 🪵' },
+    { id: 'إنقاذ الطعام', label: 'إنقاذ النعمة والتبرع 💚' }
   ];
 
   // Filter meals
@@ -44,63 +44,106 @@ export default function CustomerHome({ searchTerm, activeCategory, setActiveCate
 
   return (
     <div className="animate-fade-in">
-      {/* Hero Banner */}
+      {/* Hero Banner with REAL Background Image & Rich Basra Overlay */}
       <div style={{
-        background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+        backgroundImage: `linear-gradient(135deg, rgba(70, 43, 24, 0.88) 0%, rgba(45, 90, 39, 0.82) 50%, rgba(14, 107, 168, 0.85) 100%), url(${BASRA_IMAGES.shanasheel})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         color: 'white',
         borderRadius: 24,
-        padding: '36px 30px',
+        padding: '44px 36px',
         marginBottom: 32,
         position: 'relative',
         overflow: 'hidden',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.15)'
+        boxShadow: '0 12px 32px rgba(70, 43, 24, 0.3)',
+        border: '2px solid #d4a373'
       }}>
-        <div style={{ maxWidth: 640, position: 'relative', zIndex: 2 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(217, 119, 6, 0.2)', color: '#fbbf24', padding: '6px 14px', borderRadius: 20, fontSize: '0.82rem', fontWeight: 700, marginBottom: 14, border: '1px solid rgba(251, 191, 36, 0.3)' }}>
-            <Sparkles size={14} /> نكهات بصرية أصيلة
+        <div style={{ maxWidth: 700, position: 'relative', zIndex: 2 }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            background: 'rgba(212, 163, 115, 0.3)',
+            color: '#fef3c7',
+            padding: '6px 16px',
+            borderRadius: 20,
+            fontSize: '0.85rem',
+            fontWeight: 800,
+            marginBottom: 16,
+            border: '1px solid rgba(233, 196, 106, 0.5)',
+            backdropFilter: 'blur(6px)'
+          }}>
+            🌴 الشناشيل الأصيلة • بساتين النخيل • ضفاف شط العرب والجسر الإيطالي 🌉
           </div>
-          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, lineHeight: 1.3, marginBottom: 12 }}>
-            استمتع بنكهة <span style={{ color: '#f59e0b' }}>البصرة الحقيقية</span> 🌊
+
+          <h1 style={{ fontSize: '2.4rem', fontWeight: 900, lineHeight: 1.35, marginBottom: 14, color: '#faf6ee' }}>
+            نكهات البصرة الحقيقية.. <span style={{ color: '#e9c46a' }}>من بيوت الطباخين إلى مائدتك</span> 🌊
           </h1>
-          <p style={{ fontSize: '0.95rem', opacity: 0.85, marginBottom: 24, lineHeight: 1.6 }}>
-            من سمك المسقوف على حطب الغرب إلى قيمر السدة والمطبق البصري الحامض، تصفح واطلب وجباتك المخصصة أو جدولها لأسبوعك!
+          <p style={{ fontSize: '1rem', opacity: 0.95, marginBottom: 28, lineHeight: 1.7, color: '#f4eae0' }}>
+            استمتع بعراقة المطبخ البصري مع أكلات السمك المسقوف على حطب الغرب وقيمر السدة والمطبق البصري المعتق باللومي والحوايج.
           </p>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
             <button
               onClick={onOpenFlavorMatch}
-              style={{ background: '#d97706', color: 'white', border: 'none', padding: '12px 22px', borderRadius: 12, fontWeight: 800, fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: 8 }}
+              style={{
+                background: 'linear-gradient(90deg, #d4a373 0%, #e9c46a 100%)',
+                color: '#3d2413',
+                border: 'none',
+                padding: '13px 26px',
+                borderRadius: 14,
+                fontWeight: 900,
+                fontSize: '0.98rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                boxShadow: '0 4px 14px rgba(0,0,0,0.25)'
+              }}
             >
-              <Sparkles size={18} /> جرب Flavor Match الذكي
+              <Sparkles size={18} /> جرب Flavor Match الذكي 🎯
             </button>
+
             <button
               onClick={() => setActiveCategory(isNight ? 'night' : 'breakfast')}
-              style={{ background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: 12, fontWeight: 700, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 6 }}
+              style={{
+                background: 'rgba(255,255,255,0.18)',
+                color: '#ffffff',
+                border: '1px solid rgba(255,255,255,0.4)',
+                padding: '13px 24px',
+                borderRadius: 14,
+                fontWeight: 800,
+                fontSize: '0.92rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                backdropFilter: 'blur(6px)'
+              }}
             >
-              {isNight ? <Moon size={16} color="#fbbf24" /> : <Sun size={16} color="#f59e0b" />}
-              {isNight ? 'تصفح Basra Night Food' : 'تصفح Breakfast in Basra'}
+              {isNight ? <Moon size={16} color="#e9c46a" /> : <Sun size={16} color="#e9c46a" />}
+              {isNight ? 'أكلات السهر في البصرة (Basra Night Food) 🌙' : 'ريوق قيمر السدة (Breakfast in Basra) ☀️'}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Category Pills */}
-      <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 8, marginBottom: 20 }}>
+      {/* Category Pills with Brown & Green Palette */}
+      <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 10, marginBottom: 24 }}>
         {categories.map(cat => (
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}
             style={{
-              padding: '8px 16px',
-              borderRadius: 20,
-              fontSize: '0.88rem',
-              fontWeight: 700,
+              padding: '10px 20px',
+              borderRadius: 22,
+              fontSize: '0.9rem',
+              fontWeight: 800,
               whiteSpace: 'nowrap',
-              border: '1px solid',
-              borderColor: activeCategory === cat.id ? '#d97706' : '#e2e8f0',
-              background: activeCategory === cat.id ? '#d97706' : 'white',
-              color: activeCategory === cat.id ? 'white' : '#475569',
-              transition: 'all 0.2s'
+              border: '1.5px solid',
+              borderColor: activeCategory === cat.id ? '#5c3a21' : '#e6d5c3',
+              background: activeCategory === cat.id ? '#5c3a21' : '#ffffff',
+              color: activeCategory === cat.id ? '#ffffff' : '#6e5849',
+              transition: 'all 0.2s',
+              boxShadow: activeCategory === cat.id ? '0 4px 12px rgba(92, 58, 33, 0.2)' : 'none'
             }}
           >
             {cat.label}
@@ -108,18 +151,28 @@ export default function CustomerHome({ searchTerm, activeCategory, setActiveCate
         ))}
       </div>
 
-      {/* Meals Grid */}
+      {/* Meals Catalog */}
       <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#1e293b' }}>
-            قائمة الوجبات المتاحة ({filteredMeals.length}):
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#5c3a21', display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Compass size={22} color="#2d5a27" /> أشهى الأطباق البصرية المتاحة ({filteredMeals.length}):
           </h2>
         </div>
 
         {filteredMeals.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '40px 20px', background: 'white', borderRadius: 16, border: '1px solid #e2e8f0' }}>
-            <Utensils size={40} color="#94a3b8" style={{ margin: '0 auto 12px' }} />
-            <p style={{ fontSize: '1rem', fontWeight: 700, color: '#64748b' }}>لم نجد وجبات تطابق بحثك حالياً</p>
+          <div style={{
+            textAlign: 'center',
+            padding: '48px 20px',
+            background: '#ffffff',
+            borderRadius: 20,
+            border: '2px dashed #e6d5c3',
+            boxShadow: 'var(--shadow-sm)'
+          }}>
+            <Utensils size={44} color="#d4a373" style={{ margin: '0 auto 14px' }} />
+            <p style={{ fontSize: '1.1rem', fontWeight: 800, color: '#5c3a21' }}>لا توجد وجبات مضافة حالياً في القائمة</p>
+            <p style={{ fontSize: '0.88rem', color: '#6e5849', marginTop: 6 }}>
+              سيتم إضافة أشهى الوجبات البصرية الطازجة قريباً جداً 🌴
+            </p>
           </div>
         ) : (
           <div className="meals-grid">
