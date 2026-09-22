@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Mic, MicOff, Sparkles, X, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Mic, MicOff, X, CheckCircle } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { MOCK_MEALS } from '../../mockData/data';
 
@@ -14,17 +14,16 @@ export default function VoiceOrderModal({ onClose }) {
     setTranscript('جاري الاستماع لصوتك بالبصرة...');
     setDetectedMeal(null);
 
-    // Simulate speech recognition result after 2.5 seconds
     setTimeout(() => {
       setIsListening(false);
       const samplePhrases = [
-        "أريد مطبق زبيدي بصري من أم أحمد لـ 3 أشخاص",
-        "طلب مسقوف حطب من الشيف أبو سجاد للعشاء",
+        "أريد مطبق زبيدي بصري لـ 3 أشخاص",
+        "طلب مسقوف حطب للعشاء",
         "كاهي وقيمر سدة بصري طازج للريوق"
       ];
       const randomPhrase = samplePhrases[0];
       setTranscript(`"${randomPhrase}"`);
-      setDetectedMeal(MOCK_MEALS[0]); // Muted zbaidi meal
+      setDetectedMeal(MOCK_MEALS[0] || null);
     }, 2500);
   };
 
@@ -56,7 +55,6 @@ export default function VoiceOrderModal({ onClose }) {
           تحدث باللغة العربية أو اللهجة البصرية واطلب وجبتك مباشرة بصوتك!
         </p>
 
-        {/* Mic Pulse Button */}
         <div style={{ margin: '20px 0' }}>
           <button
             onClick={handleStartListening}
@@ -82,7 +80,6 @@ export default function VoiceOrderModal({ onClose }) {
           </p>
         </div>
 
-        {/* Transcript Area */}
         {transcript && (
           <div style={{ background: '#f8fafc', padding: 14, borderRadius: 12, border: '1px solid #e2e8f0', marginBottom: 16 }}>
             <span style={{ fontSize: '0.8rem', color: '#64748b', display: 'block', marginBottom: 4 }}>
@@ -92,7 +89,6 @@ export default function VoiceOrderModal({ onClose }) {
           </div>
         )}
 
-        {/* Detected Meal Box */}
         {detectedMeal && (
           <div style={{ background: '#ecfdf5', padding: 14, borderRadius: 12, border: '1px solid #a7f3d0', display: 'flex', alignItems: 'center', gap: 12, textAlign: 'right' }}>
             <img src={detectedMeal.image} alt="" style={{ width: 50, height: 50, borderRadius: 8, objectFit: 'cover' }} />

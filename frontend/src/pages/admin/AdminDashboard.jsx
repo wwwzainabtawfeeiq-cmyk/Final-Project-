@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ShieldCheck, Users, ChefHat, ShoppingBag, HeartHandshake, CheckCircle } from 'lucide-react';
 import { MOCK_COOKS } from '../../mockData/data';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('overview'); // overview | cooks | orders | features | reports
+  const [activeTab, setActiveTab] = useState('overview');
   const [cooks, setCooks] = useState(MOCK_COOKS);
 
   const toggleVerifyCook = (cookId) => {
@@ -12,7 +12,6 @@ export default function AdminDashboard() {
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: 1100, margin: '0 auto' }}>
-      {/* Admin Header with Shanasheel Theme */}
       <div style={{
         background: 'linear-gradient(135deg, #3d2413 0%, #153817 50%, #0a4d79 100%)',
         color: 'white',
@@ -77,7 +76,6 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Overview Stats */}
       {activeTab === 'overview' && (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 20, marginBottom: 32 }}>
@@ -114,7 +112,6 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Quick Actions & Verification Queue preview */}
           <div style={{ background: 'white', border: '1.5px solid #e6d5c3', borderRadius: 20, padding: 24, boxShadow: 'var(--shadow-sm)' }}>
             <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#5c3a21', marginBottom: 16 }}>
               مركز حوكمة وتوثيق الطباخين (Cook Verification Center):
@@ -160,7 +157,6 @@ export default function AdminDashboard() {
         </>
       )}
 
-      {/* Features Tab */}
       {activeTab === 'features' && (
         <div style={{ background: 'white', border: '1.5px solid #e6d5c3', borderRadius: 20, padding: 24 }}>
           <h3 style={{ fontSize: '1.15rem', fontWeight: 900, color: '#5c3a21', marginBottom: 16 }}>
@@ -172,7 +168,7 @@ export default function AdminDashboard() {
               { title: 'Basra Night Food 🌙', status: 'نشط تلقائياً (6 مساءً - 5 صباحاً)' },
               { title: 'Breakfast in Basra ☀️', status: 'نشط تلقائياً (5 صباحاً - 11 صباحاً)' },
               { title: 'Flavor Match AI 🎯', status: 'نشط بكامل الخوارزميات' },
-              { title: 'Surplus-to-Charity Bridge 💚', status: 'نشط مع الجمعيات الخيرية' },
+              { title: 'Surplus-to-Charity Bridge <ctrl42>', status: 'نشط مع الجمعيات الخيرية' },
               { title: 'Chef-to-Chef Barter 🔄', status: 'نشط' },
               { title: 'Secret Recipe Marketplace 📜', status: 'نشط' }
             ].map((f, i) => (

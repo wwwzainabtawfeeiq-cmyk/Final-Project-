@@ -4,9 +4,9 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
-  const [favorites, setFavorites] = useState(['m1', 'm2']); // Pre-favorited IDs for demo
-  const [orderType, setOrderType] = useState('standard'); // 'standard' | 'custom' | 'group' | 'scheduled'
-  const [activePortal, setActivePortal] = useState('customer'); // 'customer' | 'cook' | 'admin'
+  const [favorites, setFavorites] = useState(['m1', 'm2']);
+  const [orderType, setOrderType] = useState('standard');
+  const [activePortal, setActivePortal] = useState('customer');
 
   const addToCart = (meal, quantity = 1) => {
     setCartItems(prev => {
@@ -68,6 +68,5 @@ export function CartProvider({ children }) {
   );
 }
 
-export function useCart() {
-  return useContext(CartContext);
-}
+/* eslint-disable react-refresh/only-export-components */
+export const useCart = () => useContext(CartContext);

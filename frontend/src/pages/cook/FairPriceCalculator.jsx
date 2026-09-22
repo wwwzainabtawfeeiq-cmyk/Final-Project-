@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Calculator, DollarSign, CheckCircle, Info } from 'lucide-react';
+import { useState } from 'react';
+import { Calculator } from 'lucide-react';
 
 export default function FairPriceCalculator() {
   const [ingredientsCost, setIngredientsCost] = useState(8000);
   const [prepHours, setPrepHours] = useState(1.5);
-  const [hourlyWage, setHourlyWage] = useState(5000); // 5000 ID per hour
+  const [hourlyWage, setHourlyWage] = useState(5000);
   const [packagingCost, setPackagingCost] = useState(1500);
-  const [desiredProfitMargin, setDesiredProfitMargin] = useState(25); // 25%
+  const [desiredProfitMargin] = useState(25);
 
   const laborCost = prepHours * hourlyWage;
   const baseCost = ingredientsCost + laborCost + packagingCost;
-  const platformFee = Math.round(baseCost * 0.05); // 5% platform fee
+  const platformFee = Math.round(baseCost * 0.05);
   const recommendedPrice = Math.round(baseCost * (1 + desiredProfitMargin / 100) + platformFee);
   const netProfit = recommendedPrice - baseCost - platformFee;
 
@@ -34,7 +34,6 @@ export default function FairPriceCalculator() {
         <hr style={{ border: 'none', borderTop: '1px solid #f1f5f9', margin: '20px 0' }} />
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 18, marginBottom: 24 }}>
-          {/* Ingredients Cost */}
           <div>
             <label style={{ fontSize: '0.88rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 6 }}>
               تكلفة المكونات والسمك/اللحم (د.ع):
@@ -47,7 +46,6 @@ export default function FairPriceCalculator() {
             />
           </div>
 
-          {/* Prep Hours */}
           <div>
             <label style={{ fontSize: '0.88rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 6 }}>
               وقت التحضير والطبخ (بالساعات):
@@ -61,7 +59,6 @@ export default function FairPriceCalculator() {
             />
           </div>
 
-          {/* Hourly Wage */}
           <div>
             <label style={{ fontSize: '0.88rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 6 }}>
               تقدير قيمة جهدك باللساعة (د.ع):
@@ -74,7 +71,6 @@ export default function FairPriceCalculator() {
             />
           </div>
 
-          {/* Packaging Cost */}
           <div>
             <label style={{ fontSize: '0.88rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 6 }}>
               تكلفة التغليف والأكياس (د.ع):
@@ -88,7 +84,6 @@ export default function FairPriceCalculator() {
           </div>
         </div>
 
-        {/* Calculation Result Box */}
         <div style={{ background: '#fff7ed', border: '1px solid #fde68a', borderRadius: 16, padding: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: '0.9rem', color: '#78350f' }}>
             <span>إجمالي التكلفة التشغيلية (المواد + الجهد):</span>

@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Utensils, Users, Copy, Check, Send, Sparkles } from 'lucide-react';
 
 export default function CustomAndGroupOrderPage() {
-  const [activeSubTab, setActiveSubTab] = useState('custom'); // 'custom' | 'group'
+  const [activeSubTab, setActiveSubTab] = useState('custom');
   
-  // Custom Order Form state
   const [cookSpecialty, setCookSpecialty] = useState('مأكولات بحرية ومسقوف');
   const [dishDescription, setDishDescription] = useState('');
   const [servings, setServings] = useState(4);
-  const [deliveryDate, setDeliveryDate] = useState('2026-09-22');
+  const [deliveryDate, setDeliveryDate] = useState('2026-09-23');
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Group Order state
   const [groupTitle, setGroupTitle] = useState('غداء العائلة / المكتب');
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -27,7 +25,6 @@ export default function CustomAndGroupOrderPage() {
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: 850, margin: '0 auto' }}>
-      {/* Tab Selector */}
       <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
         <button
           style={{
@@ -96,7 +93,6 @@ export default function CustomAndGroupOrderPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmitCustom}>
-              {/* Select Category Specialty */}
               <div style={{ marginBottom: 16 }}>
                 <label style={{ fontSize: '0.9rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 6 }}>
                   نوع المطبخ المطلوبة:
@@ -113,7 +109,6 @@ export default function CustomAndGroupOrderPage() {
                 </select>
               </div>
 
-              {/* Description */}
               <div style={{ marginBottom: 16 }}>
                 <label style={{ fontSize: '0.9rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 6 }}>
                   تفاصيل ومواصفات الوجبة المطلوبة:
@@ -128,7 +123,6 @@ export default function CustomAndGroupOrderPage() {
                 />
               </div>
 
-              {/* Servings & Date */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
                 <div>
                   <label style={{ fontSize: '0.9rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 6 }}>
@@ -186,7 +180,6 @@ export default function CustomAndGroupOrderPage() {
             />
           </div>
 
-          {/* Group Link Share Box */}
           <div style={{ background: '#f8fafc', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0', marginBottom: 20 }}>
             <span style={{ fontSize: '0.82rem', color: '#64748b', display: 'block', marginBottom: 6 }}>
               رابط المشاركة التفاعلي للمجموعة:

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Trophy, Award, Star, CheckCircle } from 'lucide-react';
+import { Trophy, Award, Star } from 'lucide-react';
 import { MOCK_CHALLENGES } from '../../mockData/data';
 
 export default function ChallengesPage() {
@@ -12,7 +11,6 @@ export default function ChallengesPage() {
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: 900, margin: '0 auto' }}>
-      {/* Header Banner */}
       <div style={{ background: 'linear-gradient(135deg, #e11d48 0%, #be123c 100%)', color: 'white', padding: '28px 24px', borderRadius: 20, marginBottom: 28, textAlign: 'center' }}>
         <Trophy size={40} style={{ margin: '0 auto 10px' }} />
         <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>
@@ -23,7 +21,6 @@ export default function ChallengesPage() {
         </p>
       </div>
 
-      {/* Badges Showcase */}
       <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, padding: 20, marginBottom: 28 }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#1e293b', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
           <Award color="#d97706" size={20} /> الأوسمة المكتسبة والمتاحة (My Badges):
@@ -56,7 +53,6 @@ export default function ChallengesPage() {
         </div>
       </div>
 
-      {/* Active Challenges List */}
       <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#1e293b', marginBottom: 16 }}>
         🔥 التحديات النشطة حالياً:
       </h3>
@@ -75,7 +71,6 @@ export default function ChallengesPage() {
                 </span>
               </div>
 
-              {/* Progress Bar */}
               <div style={{ margin: '14px 0 8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 700, color: '#475569', marginBottom: 4 }}>
                   <span>التقدم الحالي: {ch.progress} / {ch.target}</span>

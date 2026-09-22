@@ -1,5 +1,4 @@
-import React from 'react';
-import { BookOpen, Star, ShoppingCart, Lock } from 'lucide-react';
+import { BookOpen, Star, ShoppingCart } from 'lucide-react';
 import { MOCK_SECRET_RECIPES } from '../../mockData/data';
 
 export default function SecretRecipeMarket() {

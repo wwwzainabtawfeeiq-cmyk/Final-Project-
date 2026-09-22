@@ -1,7 +1,6 @@
-import React from 'react';
 import { MOCK_MEALS, BASRA_IMAGES } from '../../mockData/data';
 import MealCard from '../../components/customer/MealCard';
-import { Sparkles, Moon, Sun, Utensils, Compass, Waves } from 'lucide-react';
+import { Sparkles, Moon, Sun, Utensils, Compass } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 export default function CustomerHome({ searchTerm, activeCategory, setActiveCategory, onOpenFlavorMatch }) {
@@ -19,7 +18,6 @@ export default function CustomerHome({ searchTerm, activeCategory, setActiveCate
     { id: 'إنقاذ الطعام', label: 'إنقاذ النعمة والتبرع 💚' }
   ];
 
-  // Filter meals
   const filteredMeals = MOCK_MEALS.filter(meal => {
     const matchesSearch = meal.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           meal.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -44,7 +42,6 @@ export default function CustomerHome({ searchTerm, activeCategory, setActiveCate
 
   return (
     <div className="animate-fade-in">
-      {/* Hero Banner with REAL Background Image & Rich Basra Overlay */}
       <div style={{
         backgroundImage: `linear-gradient(135deg, rgba(70, 43, 24, 0.88) 0%, rgba(45, 90, 39, 0.82) 50%, rgba(14, 107, 168, 0.85) 100%), url(${BASRA_IMAGES.shanasheel})`,
         backgroundSize: 'cover',
@@ -126,7 +123,6 @@ export default function CustomerHome({ searchTerm, activeCategory, setActiveCate
         </div>
       </div>
 
-      {/* Category Pills with Brown & Green Palette */}
       <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 10, marginBottom: 24 }}>
         {categories.map(cat => (
           <button
@@ -151,7 +147,6 @@ export default function CustomerHome({ searchTerm, activeCategory, setActiveCate
         ))}
       </div>
 
-      {/* Meals Catalog */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
           <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#5c3a21', display: 'flex', alignItems: 'center', gap: 8 }}>

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, PlusCircle, Image, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { X } from 'lucide-react';
 import { MOCK_MEALS } from '../../mockData/data';
 
 export default function AddEditMealModal({ onClose }) {
@@ -120,7 +120,6 @@ export default function AddEditMealModal({ onClose }) {
             />
           </div>
 
-          {/* Toggles */}
           <div style={{ display: 'flex', gap: 16, marginBottom: 20 }}>
             <label style={{ fontSize: '0.8rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
               <input type="checkbox" checked={isNightFood} onChange={(e) => setIsNightFood(e.target.checked)} />

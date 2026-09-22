@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ChefHat, ShieldCheck, ShoppingBag, DollarSign, Star, PlusCircle, Calculator, RefreshCw, BookOpen, HeartHandshake } from 'lucide-react';
 
 export default function CookDashboard({ onOpenAddMeal, onNavigateCookTab }) {
@@ -6,7 +6,6 @@ export default function CookDashboard({ onOpenAddMeal, onNavigateCookTab }) {
 
   return (
     <div className="animate-fade-in">
-      {/* Cook Welcome Header with Shanasheel & Palm Theme */}
       <div style={{
         background: 'linear-gradient(135deg, #462b18 0%, #2d5a27 100%)',
         color: 'white',
@@ -99,7 +98,6 @@ export default function CookDashboard({ onOpenAddMeal, onNavigateCookTab }) {
         </div>
       </div>
 
-      {/* Stats Cards Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 20, marginBottom: 32 }}>
         <div style={{ background: 'white', border: '1.5px solid #e6d5c3', borderRadius: 18, padding: 20, boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', color: '#6e5849', fontSize: '0.85rem', fontWeight: 800 }}>
@@ -138,13 +136,11 @@ export default function CookDashboard({ onOpenAddMeal, onNavigateCookTab }) {
         </div>
       </div>
 
-      {/* Cook Quick Tools Grid */}
       <h3 style={{ fontSize: '1.2rem', fontWeight: 900, color: '#5c3a21', marginBottom: 18 }}>
         🛠️ أدوات وخدمات المطبخ البصري (Cook Tools):
       </h3>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
-        {/* Fair Price Calculator */}
         <div
           onClick={() => onNavigateCookTab('fair-price')}
           style={{ background: 'white', border: '1.5px solid #e6d5c3', borderRadius: 18, padding: 22, cursor: 'pointer', transition: 'all 0.2s', boxShadow: 'var(--shadow-sm)' }}
@@ -160,7 +156,6 @@ export default function CookDashboard({ onOpenAddMeal, onNavigateCookTab }) {
           </p>
         </div>
 
-        {/* Chef-to-Chef Barter */}
         <div
           onClick={() => onNavigateCookTab('barter')}
           style={{ background: 'white', border: '1.5px solid #e6d5c3', borderRadius: 18, padding: 22, cursor: 'pointer', transition: 'all 0.2s', boxShadow: 'var(--shadow-sm)' }}
@@ -176,7 +171,6 @@ export default function CookDashboard({ onOpenAddMeal, onNavigateCookTab }) {
           </p>
         </div>
 
-        {/* Secret Recipes Marketplace */}
         <div
           onClick={() => onNavigateCookTab('secret-recipes')}
           style={{ background: 'white', border: '1.5px solid #e6d5c3', borderRadius: 18, padding: 22, cursor: 'pointer', transition: 'all 0.2s', boxShadow: 'var(--shadow-sm)' }}

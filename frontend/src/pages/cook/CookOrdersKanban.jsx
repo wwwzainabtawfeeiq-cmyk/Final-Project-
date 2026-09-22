@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ShoppingBag, Clock, CheckCircle, Truck, AlertCircle, Utensils, Users, Calendar } from 'lucide-react';
+import { useState } from 'react';
+import { ShoppingBag } from 'lucide-react';
 
 export default function CookOrdersKanban() {
   const [orders, setOrders] = useState([
@@ -9,8 +9,8 @@ export default function CookOrdersKanban() {
       mealTitle: "مطبق زبيدي بصري على أصوله",
       qty: 2,
       totalPrice: 36000,
-      type: "standard", // standard | custom | group | scheduled
-      status: "pending", // pending | preparing | ready | delivery | completed
+      type: "standard",
+      status: "pending",
       date: "اليوم 1:15 م",
       notes: "يرجى زيادة اللومي الحامض وإضافة حوايج إضافية"
     },
@@ -93,7 +93,6 @@ export default function CookOrdersKanban() {
                 </span>
               </div>
 
-              {/* Status Change Action Buttons */}
               <div style={{ display: 'flex', gap: 6 }}>
                 {order.status === 'pending' && (
                   <button

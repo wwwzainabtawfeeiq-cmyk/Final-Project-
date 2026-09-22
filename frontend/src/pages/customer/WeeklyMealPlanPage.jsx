@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Calendar, Plus, Trash2, CheckCircle2 } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, Trash2, CheckCircle2 } from 'lucide-react';
 
 const DAYS = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
@@ -30,7 +30,6 @@ export default function WeeklyMealPlanPage() {
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: 1100, margin: '0 auto' }}>
-      {/* Header Banner */}
       <div style={{ background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)', color: 'white', padding: '28px 24px', borderRadius: 20, marginBottom: 24, textAlign: 'center' }}>
         <Calendar size={36} style={{ margin: '0 auto 10px' }} />
         <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>
@@ -47,7 +46,6 @@ export default function WeeklyMealPlanPage() {
         </div>
       )}
 
-      {/* Days Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18, marginBottom: 28 }}>
         {DAYS.map(day => {
           const plan = weeklyPlan[day];
@@ -58,7 +56,6 @@ export default function WeeklyMealPlanPage() {
                 <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#d97706' }}>جدول يومي</span>
               </div>
 
-              {/* Breakfast Slot */}
               <div style={{ marginBottom: 10, padding: 8, background: '#f8fafc', borderRadius: 8, border: '1px border-dashed #cbd5e1' }}>
                 <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'block' }}>☀️ الإفطار:</span>
                 {plan.breakfast ? (
@@ -73,7 +70,6 @@ export default function WeeklyMealPlanPage() {
                 )}
               </div>
 
-              {/* Lunch Slot */}
               <div style={{ marginBottom: 10, padding: 8, background: '#f8fafc', borderRadius: 8 }}>
                 <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'block' }}>🍚 الغداء:</span>
                 {plan.lunch ? (
@@ -88,7 +84,6 @@ export default function WeeklyMealPlanPage() {
                 )}
               </div>
 
-              {/* Dinner Slot */}
               <div style={{ padding: 8, background: '#f8fafc', borderRadius: 8 }}>
                 <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, display: 'block' }}>🌙 العشاء:</span>
                 {plan.dinner ? (

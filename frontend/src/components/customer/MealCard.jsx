@@ -1,4 +1,3 @@
-import React from 'react';
 import { useCart } from '../../context/CartContext';
 import { Heart, Star, Clock, PlusCircle, Check } from 'lucide-react';
 
@@ -9,11 +8,9 @@ export default function MealCard({ meal }) {
 
   return (
     <div className="meal-card animate-fade-in">
-      {/* Image & Badge Wrapper */}
       <div className="meal-card-img-wrapper">
         <img src={meal.image} alt={meal.title} className="meal-card-img" />
 
-        {/* Favorite Heart */}
         <button
           className={`favorite-btn ${isFav ? 'active' : ''}`}
           onClick={() => toggleFavorite(meal.id)}
@@ -22,7 +19,6 @@ export default function MealCard({ meal }) {
           <Heart size={18} fill={isFav ? '#e11d48' : 'none'} />
         </button>
 
-        {/* Dynamic Badge */}
         {meal.isSurplus && (
           <span className="meal-badge meal-badge-surplus">
             💚 إنقاذ الطعام 50%
@@ -40,7 +36,6 @@ export default function MealCard({ meal }) {
         )}
       </div>
 
-      {/* Body */}
       <div className="meal-card-body">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
           <span style={{ fontSize: '0.78rem', color: '#0d9488', fontWeight: 600 }}>{meal.category}</span>
@@ -61,7 +56,6 @@ export default function MealCard({ meal }) {
 
         <p className="meal-card-desc">{meal.description}</p>
 
-        {/* Footer */}
         <div className="meal-card-footer">
           <div>
             <span className="meal-price">{meal.price.toLocaleString()} د.ع</span>

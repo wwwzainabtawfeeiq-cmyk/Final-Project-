@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
-import { Sparkles, Check, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, RefreshCw } from 'lucide-react';
 import { MOCK_MEALS } from '../../mockData/data';
 import MealCard from '../../components/customer/MealCard';
 
 export default function FlavorMatchPage() {
   const [spicyLevel, setSpicyLevel] = useState(2);
-  const [sourLevel, setSourLevel] = useState(4); // Basra sour love!
+  const [sourLevel, setSourLevel] = useState(4);
   const [traditionalLevel, setTraditionalLevel] = useState(5);
-  const [budgetLevel, setBudgetLevel] = useState('medium'); // 'low' | 'medium' | 'high'
+  const [budgetLevel, setBudgetLevel] = useState('medium');
   const [isCalculated, setIsCalculated] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
 
   const handleMatch = () => {
     setIsCalculated(true);
-    // Filter meals matching the closest score
     const matches = MOCK_MEALS.filter(m => {
       const spDiff = Math.abs(m.tasteProfile.spicy - spicyLevel);
       const sourDiff = Math.abs(m.tasteProfile.sour - sourLevel);
@@ -24,7 +23,6 @@ export default function FlavorMatchPage() {
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: 900, margin: '0 auto' }}>
-      {/* Header Banner */}
       <div style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: 'white', padding: '32px 24px', borderRadius: 20, marginBottom: 28, textAlign: 'center' }}>
         <div style={{ background: 'rgba(255,255,255,0.2)', width: 54, height: 54, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
           <Sparkles size={28} />
@@ -37,14 +35,12 @@ export default function FlavorMatchPage() {
         </p>
       </div>
 
-      {/* Quiz Form */}
       <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, padding: 24, marginBottom: 32, boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
         <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: 20, borderBottom: '2px solid #fef3c7', paddingBottom: 8 }}>
           بناء ملف الذوق الخاص بك (Taste Profile Builder):
         </h3>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24, marginBottom: 24 }}>
-          {/* Spicy Level */}
           <div>
             <label style={{ fontSize: '0.9rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 8 }}>
               درجة الحرارة (الفلفل والسبايسي): {spicyLevel} / 5 🌶️
@@ -63,7 +59,6 @@ export default function FlavorMatchPage() {
             </div>
           </div>
 
-          {/* Sour Level */}
           <div>
             <label style={{ fontSize: '0.9rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 8 }}>
               درجة الحموضة (اللومي والتمور البصرية): {sourLevel} / 5 🍋
@@ -82,7 +77,6 @@ export default function FlavorMatchPage() {
             </div>
           </div>
 
-          {/* Traditional Level */}
           <div>
             <label style={{ fontSize: '0.9rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 8 }}>
               الأصالة (تقليدي بصري vs عصري): {traditionalLevel} / 5 🏺
@@ -101,7 +95,6 @@ export default function FlavorMatchPage() {
             </div>
           </div>
 
-          {/* Budget Selector */}
           <div>
             <label style={{ fontSize: '0.9rem', fontWeight: 700, color: '#334155', display: 'block', marginBottom: 8 }}>
               فئة الميزانية 💰
@@ -155,7 +148,6 @@ export default function FlavorMatchPage() {
         </button>
       </div>
 
-      {/* Results Section */}
       {isCalculated && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>

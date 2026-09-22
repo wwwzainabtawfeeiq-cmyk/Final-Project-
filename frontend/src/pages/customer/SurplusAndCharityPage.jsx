@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { HeartHandshake, ShieldAlert, Heart, CheckCircle2 } from 'lucide-react';
 import { MOCK_MEALS } from '../../mockData/data';
 import MealCard from '../../components/customer/MealCard';
@@ -16,7 +16,6 @@ export default function SurplusAndCharityPage() {
 
   return (
     <div className="animate-fade-in" style={{ maxWidth: 950, margin: '0 auto' }}>
-      {/* Header Banner */}
       <div style={{ background: 'linear-gradient(135deg, #15803d 0%, #166534 100%)', color: 'white', padding: '28px 24px', borderRadius: 20, marginBottom: 28, textAlign: 'center' }}>
         <HeartHandshake size={42} style={{ margin: '0 auto 10px' }} />
         <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: 6 }}>
@@ -27,7 +26,6 @@ export default function SurplusAndCharityPage() {
         </p>
       </div>
 
-      {/* Section 1: Food Rescue Market */}
       <div style={{ marginBottom: 36 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
           <ShieldAlert color="#d97706" size={22} />
@@ -43,7 +41,6 @@ export default function SurplusAndCharityPage() {
         </div>
       </div>
 
-      {/* Section 2: Direct Charity Bridge Form */}
       <div style={{ background: 'white', border: '1px solid #bbf7d0', borderRadius: 16, padding: 24, boxShadow: '0 4px 12px rgba(22, 163, 74, 0.08)' }}>
         <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#14532d', marginBottom: 6, display: 'flex', alignItems: 'center', gap: 8 }}>
           <Heart color="#e11d48" size={20} /> جسر التبرع المباشر (Surplus-to-Charity Bridge)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Search, MapPin, ShoppingBag, Mic, Sparkles, Heart } from 'lucide-react';
 import VoiceOrderModal from './VoiceOrderModal';
@@ -12,7 +12,6 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
     <>
       <header className="customer-navbar">
         <div className="navbar-inner">
-          {/* Official New Logo & Brand Title */}
           <div className="brand-logo" style={{ cursor: 'pointer' }}>
             <img
               src={logoImg}
@@ -25,13 +24,11 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
             </div>
           </div>
 
-          {/* Location Picker */}
           <div className="location-picker">
             <MapPin size={16} color="#5c3a21" />
             <span>البصرة، قرب شط العرب</span>
           </div>
 
-          {/* Search Box */}
           <div className="search-box">
             <Search className="search-icon" size={18} />
             <input
@@ -43,19 +40,15 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
             />
           </div>
 
-          {/* Nav Actions */}
           <div className="nav-actions">
-            {/* Flavor Match Button */}
             <button className="nav-btn nav-btn-accent" onClick={onOpenFlavorMatch}>
               <Sparkles size={16} /> Flavor Match
             </button>
 
-            {/* Voice-First Order Button */}
             <button className="nav-btn" onClick={() => setIsVoiceModalOpen(true)}>
               <Mic size={16} color="#5c3a21" /> طلب صوتي
             </button>
 
-            {/* Favorites Count */}
             <button className="nav-btn" style={{ position: 'relative' }}>
               <Heart size={16} color="#e11d48" />
               {favorites.length > 0 && (
@@ -70,7 +63,6 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
               )}
             </button>
 
-            {/* Cart Button */}
             <button className="nav-btn nav-btn-primary cart-btn" onClick={onOpenCart}>
               <ShoppingBag size={18} />
               <span>السلة</span>
@@ -80,7 +72,6 @@ export default function CustomerNavbar({ searchTerm, setSearchTerm, onOpenCart, 
         </div>
       </header>
 
-      {/* Voice Order Modal */}
       {isVoiceModalOpen && (
         <VoiceOrderModal onClose={() => setIsVoiceModalOpen(false)} />
       )}

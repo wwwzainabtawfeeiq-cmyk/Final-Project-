@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { RefreshCw, PlusCircle, CheckCircle, MessageSquare } from 'lucide-react';
 import { MOCK_BARTER_ITEMS } from '../../mockData/data';
 
@@ -37,7 +37,6 @@ export default function ChefBarterMarket() {
         </p>
       </div>
 
-      {/* Add New Barter Listing Form */}
       <div style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 16, padding: 20, marginBottom: 28 }}>
         <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#1e293b', marginBottom: 14 }}>
           إدراج عرض مقايضة جديد:
@@ -88,7 +87,6 @@ export default function ChefBarterMarket() {
         </form>
       </div>
 
-      {/* Barter List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {items.map(item => (
           <div key={item.id} style={{ background: 'white', border: '1px solid #e2e8f0', borderRadius: 14, padding: 18, boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>

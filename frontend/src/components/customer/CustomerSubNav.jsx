@@ -1,4 +1,3 @@
-import React from 'react';
 import { Utensils, Moon, Sun, Sparkles, Calendar, Trophy, HeartHandshake, Heart } from 'lucide-react';
 
 export default function CustomerSubNav({ activeTab, setActiveTab }) {
