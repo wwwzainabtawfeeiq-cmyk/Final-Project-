@@ -103,8 +103,59 @@ async function updateCookProfile(req, res) {
     }
 }
 
+async function getCookStatistics(req, res) {
+    try {
+        const cookId = req.user.id;
+
+        const result = await pool.query(
+            `SELECT
+                COUNT(DISTINCT o.id) AS total_orders,
+                COUNT(DISTINCT CASE
+                    WHEN o.status = 'delivered' THEN o.id
+                END) AS completed_orders,
+                COUNT(DISTINCT CASE
+                    WHEN o.status = 'cancelled' THEN o.id
+                END) AS cancelled_orders,
+                COALESCE(
+                    SUM(
+                        CASE
+                            WHEN o.status = 'delivered' THEN o.total_amount
+                            ELSE 0
+                        END
+                    ),
+                    0
+                ) AS total_sales,
+                COALESCE(
+                    (
+                        SELECT AVG(rating)
+                        FROM reviews
+                        WHERE cook_id = $1
+                    ),
+                    0
+                ) AS average_rating
+             FROM orders o
+             WHERE o.chef_id = $1`,
+            [cookId]
+        );
+
+        res.json({
+            success: true,
+            data: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error("Get cook statistics error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+}
+
 module.exports = {
     createCookProfile,
     getMyCookProfile,
-    updateCookProfile
+    updateCookProfile,
+    getCookStatistics
 };

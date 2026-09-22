@@ -1,8 +1,10 @@
 const express = require("express");
+
 const {
     createCookProfile,
     getMyCookProfile,
-    updateCookProfile
+    updateCookProfile,
+    getCookStatistics
 } = require("../controllers/cookController");
 
 const {
@@ -31,6 +33,13 @@ router.put(
     authenticateToken,
     authorizeRoles("cook"),
     updateCookProfile
+);
+
+router.get(
+    "/statistics",
+    authenticateToken,
+    authorizeRoles("cook"),
+    getCookStatistics
 );
 
 module.exports = router;
