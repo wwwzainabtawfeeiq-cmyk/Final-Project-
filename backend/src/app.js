@@ -1,3 +1,7 @@
+const preferenceRoutes = require("./routes/preferenceRoutes");
+const publicMealRoutes = require("./routes/publicMealRoutes");
+const recommendationRoutes = require("./routes/recommendationRoutes");
+const flavorMatchRoutes = require("./routes/flavorMatchRoutes");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -55,6 +59,10 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/addresses", addressRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/preferences", preferenceRoutes);
+app.use("/api/public-meals", publicMealRoutes);
+app.use("/api/recommendations", recommendationRoutes);
+app.use("/api/flavor-match", flavorMatchRoutes);
 
 app.get(
     "/api/test-cook",
@@ -77,3 +85,7 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+
+
+
