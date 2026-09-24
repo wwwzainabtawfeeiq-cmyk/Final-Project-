@@ -3,6 +3,8 @@ const publicMealRoutes = require("./routes/publicMealRoutes");
 const recommendationRoutes = require("./routes/recommendationRoutes");
 const flavorMatchRoutes = require("./routes/flavorMatchRoutes");
 const express = require("express");
+const cookInsightsRoutes = require("./routes/cookInsightsRoutes");
+const publicCookRoutes = require("./routes/publicCookRoutes");
 const fairPriceRoutes = require("./routes/fairPriceRoutes");
 const reviewSummaryRoutes = require("./routes/reviewSummaryRoutes");
 const smartSearchRoutes = require("./routes/smartSearchRoutes");
@@ -67,6 +69,8 @@ app.use("/api/public-meals", publicMealRoutes);
 app.use("/api/smart-search", smartSearchRoutes);
 app.use("/api/review-summary", reviewSummaryRoutes);
 app.use("/api/fair-price", fairPriceRoutes);
+app.use("/api/public-cooks", publicCookRoutes);
+app.use("/api/cook-insights", cookInsightsRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/flavor-match", flavorMatchRoutes);
 
@@ -91,6 +95,8 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+
 
 
 
