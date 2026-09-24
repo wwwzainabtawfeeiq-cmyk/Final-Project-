@@ -1,7 +1,8 @@
-const express = require("express");
+﻿const express = require("express");
 
 const {
-    getSmartRecommendations
+    getSmartRecommendations,
+    explainRecommendation
 } = require("../controllers/recommendationController");
 
 const {
@@ -16,6 +17,13 @@ router.get(
     authenticateToken,
     authorizeRoles("customer"),
     getSmartRecommendations
+);
+
+router.get(
+    "/explain/:mealId",
+    authenticateToken,
+    authorizeRoles("customer"),
+    explainRecommendation
 );
 
 module.exports = router;
