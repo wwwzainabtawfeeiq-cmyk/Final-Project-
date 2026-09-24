@@ -3,6 +3,7 @@ const publicMealRoutes = require("./routes/publicMealRoutes");
 const recommendationRoutes = require("./routes/recommendationRoutes");
 const flavorMatchRoutes = require("./routes/flavorMatchRoutes");
 const express = require("express");
+const reviewSummaryRoutes = require("./routes/reviewSummaryRoutes");
 const smartSearchRoutes = require("./routes/smartSearchRoutes");
 const cors = require("cors");
 require("dotenv").config();
@@ -63,6 +64,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/preferences", preferenceRoutes);
 app.use("/api/public-meals", publicMealRoutes);
 app.use("/api/smart-search", smartSearchRoutes);
+app.use("/api/review-summary", reviewSummaryRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/flavor-match", flavorMatchRoutes);
 
@@ -87,6 +89,7 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
 
 
 
