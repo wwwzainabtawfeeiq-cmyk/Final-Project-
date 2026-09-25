@@ -1,4 +1,5 @@
-﻿const adminRoutes = require("./routes/adminRoutes");
+﻿const mealPlanRoutes = require("./routes/mealPlanRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const cookVerificationRoutes = require("./routes/cookVerificationRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
 const adminInsightsRoutes = require("./routes/adminInsightsRoutes");
@@ -79,7 +80,7 @@ app.use("/api/cook-verification", cookVerificationRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/flavor-match", flavorMatchRoutes);
-
+app.use("/api/meal-plans", mealPlanRoutes);
 app.get(
     "/api/test-cook",
     authenticateToken,
