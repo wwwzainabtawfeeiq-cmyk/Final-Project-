@@ -1,4 +1,5 @@
 ﻿const preferenceRoutes = require("./routes/preferenceRoutes");
+const adminInsightsRoutes = require("./routes/adminInsightsRoutes");
 const publicMealRoutes = require("./routes/publicMealRoutes");
 const recommendationRoutes = require("./routes/recommendationRoutes");
 const flavorMatchRoutes = require("./routes/flavorMatchRoutes");
@@ -57,6 +58,7 @@ app.get("/api/test-db", async (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/cook", cookRoutes);
+app.use("/api/admin-insights", adminInsightsRoutes);
 app.use("/api/meals", mealRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
