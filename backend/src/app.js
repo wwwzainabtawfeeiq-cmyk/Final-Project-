@@ -1,4 +1,5 @@
 ﻿const mealPlanRoutes = require("./routes/mealPlanRoutes");
+const foodRescueRoutes = require("./routes/foodRescueRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const cookVerificationRoutes = require("./routes/cookVerificationRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
@@ -59,6 +60,9 @@ app.get("/api/test-db", async (req, res) => {
     }
 });
 
+
+
+app.use("/api/food-rescue", foodRescueRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/cook", cookRoutes);
 app.use("/api/admin-insights", adminInsightsRoutes);
