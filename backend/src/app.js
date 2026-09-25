@@ -1,4 +1,6 @@
-﻿const preferenceRoutes = require("./routes/preferenceRoutes");
+﻿const adminRoutes = require("./routes/adminRoutes");
+const cookVerificationRoutes = require("./routes/cookVerificationRoutes");
+const preferenceRoutes = require("./routes/preferenceRoutes");
 const adminInsightsRoutes = require("./routes/adminInsightsRoutes");
 const publicMealRoutes = require("./routes/publicMealRoutes");
 const recommendationRoutes = require("./routes/recommendationRoutes");
@@ -73,6 +75,8 @@ app.use("/api/review-summary", reviewSummaryRoutes);
 app.use("/api/fair-price", fairPriceRoutes);
 app.use("/api/public-cooks", publicCookRoutes);
 app.use("/api/cook-insights", cookInsightsRoutes);
+app.use("/api/cook-verification", cookVerificationRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/flavor-match", flavorMatchRoutes);
 
