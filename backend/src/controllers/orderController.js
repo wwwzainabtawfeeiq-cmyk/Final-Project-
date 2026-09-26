@@ -117,6 +117,8 @@ const placeOrder = async (req, res) => {
     }
 };
 
+const { analyzeCustomOrder, recommendMealsForCustomOrder } = require('../services/customOrderAIService');
+
 const placeCustomOrder = async (req, res) => {
     const client = await pool.connect();
 
@@ -133,6 +135,26 @@ const placeCustomOrder = async (req, res) => {
             special_instructions,
             scheduled_at
         } = req.body;
+
+        const aiAnalysis = analyzeCustomOrder({
+            description,
+            budget,
+            special_instructions
+        });
+
+        const mealsResult = await pool.query(
+            `SELECT id, name, description, price, tags, available_quantity, is_available, cook_id
+             FROM meals
+             WHERE cook_id = $1
+             ORDER BY id`,
+            [chef_id]
+        );
+
+        const recommendedMeals = recommendMealsForCustomOrder({
+            meals: mealsResult.rows,
+            detectedTags: aiAnalysis.detected_tags,
+            budget
+        });
 
         if (!chef_id || !description) {
             await client.query('ROLLBACK');
@@ -188,7 +210,10 @@ const placeCustomOrder = async (req, res) => {
         res.status(201).json({
             success: true,
             message: 'Custom order request placed successfully',
-            data: order
+            data: {
+                order,
+                ai_analysis: { ...aiAnalysis, recommended_meals: recommendedMeals }
+            }
         });
     } catch (error) {
         await client.query('ROLLBACK');
@@ -558,3 +583,9 @@ module.exports = {
     getCookOrders,
     updateOrderStatus
 };
+
+
+
+
+
+

@@ -297,3 +297,78 @@ INSERT INTO categories (name, description) VALUES
 ('Pastries', 'Homemade pastries and baked food'),
 ('Desserts', 'Homemade Iraqi and international desserts')
 ON CONFLICT (name) DO NOTHING;
+
+-- GROUP ORDERS
+
+CREATE TABLE IF NOT EXISTS group_orders (
+    id SERIAL PRIMARY KEY,
+    creator_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    chef_id INTEGER REFERENCES users(id) ON DELETE RESTRICT,
+    address_id INTEGER REFERENCES addresses(id) ON DELETE SET NULL,
+    status VARCHAR(30) NOT NULL DEFAULT 'open'
+        CHECK (status IN ('open', 'confirmed', 'cancelled', 'completed')),
+    scheduled_at TIMESTAMP,
+    total_amount DECIMAL(10,2) NOT NULL DEFAULT 0
+        CHECK (total_amount >= 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS group_order_members (
+    id SERIAL PRIMARY KEY,
+    group_order_id INTEGER NOT NULL REFERENCES group_orders(id) ON DELETE CASCADE,
+    customer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (group_order_id, customer_id)
+);
+
+CREATE TABLE IF NOT EXISTS group_order_items (
+    id SERIAL PRIMARY KEY,
+    group_order_id INTEGER NOT NULL REFERENCES group_orders(id) ON DELETE CASCADE,
+    meal_id INTEGER NOT NULL REFERENCES meals(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price DECIMAL(10,2) NOT NULL CHECK (unit_price >= 0),
+    added_by INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_group_orders_creator
+ON group_orders(creator_id);
+
+CREATE INDEX IF NOT EXISTS idx_group_members_group
+ON group_order_members(group_order_id);
+
+CREATE INDEX IF NOT EXISTS idx_group_items_group
+ON group_order_items(group_order_id);
+
+
+-- EVENT FOOD PLANNER
+
+CREATE TABLE IF NOT EXISTS event_plans (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    event_name VARCHAR(150) NOT NULL,
+    event_type VARCHAR(80),
+    guest_count INTEGER NOT NULL CHECK (guest_count > 0),
+    budget DECIMAL(10,2) CHECK (budget >= 0),
+    event_date TIMESTAMP,
+    notes TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft'
+        CHECK (status IN ('draft', 'planned', 'completed', 'cancelled')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS event_plan_items (
+    id SERIAL PRIMARY KEY,
+    event_plan_id INTEGER NOT NULL REFERENCES event_plans(id) ON DELETE CASCADE,
+    meal_id INTEGER NOT NULL REFERENCES meals(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price DECIMAL(10,2) NOT NULL CHECK (unit_price >= 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_event_plans_customer
+ON event_plans(customer_id);
+
+CREATE INDEX IF NOT EXISTS idx_event_plan_items_plan
+ON event_plan_items(event_plan_id);
+

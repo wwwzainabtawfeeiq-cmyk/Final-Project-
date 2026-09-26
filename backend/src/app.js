@@ -1,8 +1,21 @@
+const mealPlanRoutes = require("./routes/mealPlanRoutes");
+const foodRescueRoutes = require("./routes/foodRescueRoutes");
+const groupOrderRoutes = require("./routes/groupOrderRoutes");
+const eventPlanRoutes = require("./routes/eventPlanRoutes");
+const cookCapacityRoutes = require("./routes/cookCapacityRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const cookVerificationRoutes = require("./routes/cookVerificationRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
+const adminInsightsRoutes = require("./routes/adminInsightsRoutes");
 const publicMealRoutes = require("./routes/publicMealRoutes");
 const recommendationRoutes = require("./routes/recommendationRoutes");
 const flavorMatchRoutes = require("./routes/flavorMatchRoutes");
 const express = require("express");
+const cookInsightsRoutes = require("./routes/cookInsightsRoutes");
+const publicCookRoutes = require("./routes/publicCookRoutes");
+const fairPriceRoutes = require("./routes/fairPriceRoutes");
+const reviewSummaryRoutes = require("./routes/reviewSummaryRoutes");
+const smartSearchRoutes = require("./routes/smartSearchRoutes");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -50,8 +63,15 @@ app.get("/api/test-db", async (req, res) => {
     }
 });
 
+
+
+app.use("/api/food-rescue", foodRescueRoutes);
+app.use("/api/group-orders", groupOrderRoutes);
+app.use("/api/event-plans", eventPlanRoutes);
+app.use("/api/cook", cookCapacityRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/cook", cookRoutes);
+app.use("/api/admin-insights", adminInsightsRoutes);
 app.use("/api/meals", mealRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
@@ -61,9 +81,16 @@ app.use("/api/addresses", addressRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/preferences", preferenceRoutes);
 app.use("/api/public-meals", publicMealRoutes);
+app.use("/api/smart-search", smartSearchRoutes);
+app.use("/api/review-summary", reviewSummaryRoutes);
+app.use("/api/fair-price", fairPriceRoutes);
+app.use("/api/public-cooks", publicCookRoutes);
+app.use("/api/cook-insights", cookInsightsRoutes);
+app.use("/api/cook-verification", cookVerificationRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/flavor-match", flavorMatchRoutes);
-
+app.use("/api/meal-plans", mealPlanRoutes);
 app.get(
     "/api/test-cook",
     authenticateToken,
@@ -85,6 +112,14 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+
+
+
+
+
+
+
 
 
 
