@@ -2,6 +2,7 @@ const mealPlanRoutes = require("./routes/mealPlanRoutes");
 const foodRescueRoutes = require("./routes/foodRescueRoutes");
 const groupOrderRoutes = require("./routes/groupOrderRoutes");
 const eventPlanRoutes = require("./routes/eventPlanRoutes");
+const cookCapacityRoutes = require("./routes/cookCapacityRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const cookVerificationRoutes = require("./routes/cookVerificationRoutes");
 const preferenceRoutes = require("./routes/preferenceRoutes");
@@ -67,6 +68,7 @@ app.get("/api/test-db", async (req, res) => {
 app.use("/api/food-rescue", foodRescueRoutes);
 app.use("/api/group-orders", groupOrderRoutes);
 app.use("/api/event-plans", eventPlanRoutes);
+app.use("/api/cook", cookCapacityRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/cook", cookRoutes);
 app.use("/api/admin-insights", adminInsightsRoutes);
@@ -110,6 +112,7 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
 
 
 
