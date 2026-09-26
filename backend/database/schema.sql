@@ -340,3 +340,35 @@ ON group_order_members(group_order_id);
 CREATE INDEX IF NOT EXISTS idx_group_items_group
 ON group_order_items(group_order_id);
 
+
+-- EVENT FOOD PLANNER
+
+CREATE TABLE IF NOT EXISTS event_plans (
+    id SERIAL PRIMARY KEY,
+    customer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    event_name VARCHAR(150) NOT NULL,
+    event_type VARCHAR(80),
+    guest_count INTEGER NOT NULL CHECK (guest_count > 0),
+    budget DECIMAL(10,2) CHECK (budget >= 0),
+    event_date TIMESTAMP,
+    notes TEXT,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft'
+        CHECK (status IN ('draft', 'planned', 'completed', 'cancelled')),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS event_plan_items (
+    id SERIAL PRIMARY KEY,
+    event_plan_id INTEGER NOT NULL REFERENCES event_plans(id) ON DELETE CASCADE,
+    meal_id INTEGER NOT NULL REFERENCES meals(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price DECIMAL(10,2) NOT NULL CHECK (unit_price >= 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_event_plans_customer
+ON event_plans(customer_id);
+
+CREATE INDEX IF NOT EXISTS idx_event_plan_items_plan
+ON event_plan_items(event_plan_id);
+
