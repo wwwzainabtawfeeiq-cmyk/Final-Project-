@@ -1,4 +1,3 @@
-// بيانات تجريبية - أطباق بصري أصيلة مع صور حقيقية
 
 export interface Meal {
   id: number;
