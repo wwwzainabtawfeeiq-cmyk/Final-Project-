@@ -17,6 +17,7 @@ import MealsPage from '@/pages/MealsPage';
 import CooksPage from '@/pages/CooksPage';
 import CookProfilePage from '@/pages/CookProfilePage';
 import CookDashboard from '@/pages/CookDashboard';
+import AdminDashboard from '@/pages/AdminDashboard';
 import FavoritesPage from '@/pages/FavoritesPage';
 import CheckoutPage from '@/pages/CheckoutPage';
 import OrdersPage from '@/pages/OrdersPage';
@@ -45,6 +46,7 @@ function AnimatedRoutes() {
           <Route path="/cooks" element={<CooksPage />} />
           <Route path="/cook/:id" element={<CookProfilePage />} />
           <Route path="/cook-dashboard" element={<CookDashboard />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
@@ -99,7 +101,9 @@ export default function App() {
                 <AnimatedRoutes />
               </Layout>
               <CartDrawer />
-              {showWelcome && <WelcomeOffersModal onClose={handleCloseWelcome} />}
+              {showWelcome && (
+                <WelcomeOffersModal onClose={handleCloseWelcome} />
+              )}
             </BrowserRouter>
 
             <Toaster
@@ -112,8 +116,12 @@ export default function App() {
                   fontFamily: 'Tajawal, sans-serif',
                   backdropFilter: 'blur(20px)',
                 },
-                success: { iconTheme: { primary: '#F5D76E', secondary: '#0F2419' } },
-                error: { iconTheme: { primary: '#ef4444', secondary: '#0F2419' } },
+                success: {
+                  iconTheme: { primary: '#F5D76E', secondary: '#0F2419' },
+                },
+                error: {
+                  iconTheme: { primary: '#ef4444', secondary: '#0F2419' },
+                },
               }}
             />
           </FavoritesProvider>
