@@ -25,7 +25,7 @@ import ProfilePage from '@/pages/ProfilePage';
 import FlavorMatchPage from '@/pages/FlavorMatchPage';
 import OffersPage from '@/pages/OffersPage';
 import SubscriptionPage from '@/pages/SubscriptionPage';
-
+import OrderDetailsPage from '@/pages/OrderDetailsPage';
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -50,6 +50,8 @@ function AnimatedRoutes() {
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+<Route path="/orders/:id" element={<OrderDetailsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/flavor-match" element={<FlavorMatchPage />} />
           <Route path="/offers" element={<OffersPage />} />
