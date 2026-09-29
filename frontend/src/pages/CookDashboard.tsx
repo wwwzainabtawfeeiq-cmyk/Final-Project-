@@ -80,9 +80,10 @@ export default function CookDashboard() {
     if (urlTab && VALID_TABS.includes(urlTab) && urlTab !== activeTab) {
       setActiveTab(urlTab);
     }
+    
   }, [searchParams, activeTab]);
 
-  // تغيير التبويب + تحديث URL
+
   const handleTabChange = (newTab: MainTab) => {
     setActiveTab(newTab);
     setSearchParams({ tab: newTab });

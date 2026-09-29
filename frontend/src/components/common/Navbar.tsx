@@ -13,11 +13,12 @@ import {
   LayoutDashboard,
   Package,
   Users,
-  BarChart3,
   Star,
   DollarSign,
   Home,
   HandHeart,
+  RefreshCw,
+BookOpen,
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
@@ -60,7 +61,10 @@ export default function Navbar() {
     { to: '/cook-dashboard?tab=menu', label: t('قائمتي', 'My Menu'), icon: ChefHat },
     { to: '/cook-dashboard?tab=reviews', label: t('التقييمات', 'Reviews'), icon: Star },
     { to: '/cook-dashboard?tab=earnings', label: t('الأرباح', 'Earnings'), icon: DollarSign },
+    { to: '/chef-barter', label: t('المقايضة', 'Barter'), icon: RefreshCw }, 
+    { to: '/secret-recipes', label: t('الوصفات السرية', 'Secret Recipes'), icon: BookOpen }, 
   ];
+
 
   // ====== روابط المدير ======
   const adminLinks = [
@@ -68,8 +72,9 @@ export default function Navbar() {
     { to: '/admin?tab=users', label: t('المستخدمون', 'Users'), icon: Users },
     { to: '/admin?tab=orders', label: t('الطلبات', 'Orders'), icon: Package },
     { to: '/admin?tab=cooks', label: t('الطُهاة', 'Cooks'), icon: ChefHat },
-    { to: '/admin?tab=overview', label: t('التقارير', 'Reports'), icon: BarChart3 },
-  ];
+  { to: '/chef-barter', label: t('المقايضة', 'Barter'), icon: RefreshCw },  
+];
+
 
   const currentLinks = isCook ? cookLinks : isAdmin ? adminLinks : customerLinks;
 

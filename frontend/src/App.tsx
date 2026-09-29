@@ -10,6 +10,7 @@ import Layout from '@/components/common/Layout';
 import CartDrawer from '@/components/cart/CartDrawer';
 import SplashScreen from '@/components/common/SplashScreen';
 import WelcomeOffersModal from '@/components/offers/WelcomeOffersModal';
+import AIChatAssistant from '@/components/ai/AIChatAssistant';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
@@ -27,6 +28,8 @@ import FlavorMatchPage from '@/pages/FlavorMatchPage';
 import OffersPage from '@/pages/OffersPage';
 import SubscriptionPage from '@/pages/SubscriptionPage';
 import SurplusAndCharityPage from '@/pages/SurplusAndCharityPage';
+import ChefBarterMarket from '@/pages/ChefBarterMarket';
+import SecretRecipeMarket from '@/pages/SecretRecipeMarket';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -58,6 +61,8 @@ function AnimatedRoutes() {
           <Route path="/offers" element={<OffersPage />} />
           <Route path="/subscriptions" element={<SubscriptionPage />} />
           <Route path="/surplus-and-charity" element={<SurplusAndCharityPage />} />
+          <Route path="/chef-barter" element={<ChefBarterMarket />} />
+          <Route path="/secret-recipes" element={<SecretRecipeMarket />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -105,6 +110,7 @@ export default function App() {
                 <AnimatedRoutes />
               </Layout>
               <CartDrawer />
+              <AIChatAssistant />
               {showWelcome && (
                 <WelcomeOffersModal onClose={handleCloseWelcome} />
               )}
