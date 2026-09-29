@@ -1,12 +1,15 @@
 import type { LucideIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChefHat, Package, Clock } from 'lucide-react';
+import { ChefHat, Package, Clock, Star, DollarSign } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import CookStats from '@/components/cook/CookStats';
 import CookBadge from '@/components/loyalty/CookBadge';
 import MenuManager from '@/components/cook/MenuManager';
+import ReviewsPanel from '@/components/cook/ReviewsPanel';
+import EarningsPanel from '@/components/cook/EarningsPanel';
 
 // ====== طلبات تجريبية ======
 const mockOrders = [
@@ -55,13 +58,35 @@ const STATUS_CONFIG = {
   delivering: { ar: 'في الطريق', en: 'Delivering', color: '#a855f7', bg: 'rgba(168, 85, 247, 0.15)' },
 };
 
-type MainTab = 'orders' | 'menu';
+type MainTab = 'orders' | 'menu' | 'reviews' | 'earnings';
+
+const VALID_TABS: MainTab[] = ['orders', 'menu', 'reviews', 'earnings'];
 
 export default function CookDashboard() {
   const { t, lang } = useLanguage();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<MainTab>('orders');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // قراءة التبويب من URL
+  const initialTab = (searchParams.get('tab') as MainTab) || 'orders';
+  const [activeTab, setActiveTab] = useState<MainTab>(
+    VALID_TABS.includes(initialTab) ? initialTab : 'orders'
+  );
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+
+  // مزامنة التبويب عند تغيير URL
+  useEffect(() => {
+    const urlTab = searchParams.get('tab') as MainTab;
+    if (urlTab && VALID_TABS.includes(urlTab) && urlTab !== activeTab) {
+      setActiveTab(urlTab);
+    }
+  }, [searchParams, activeTab]);
+
+  // تغيير التبويب + تحديث URL
+  const handleTabChange = (newTab: MainTab) => {
+    setActiveTab(newTab);
+    setSearchParams({ tab: newTab });
+  };
 
   const filteredOrders = mockOrders.filter(
     (o) => selectedStatus === 'all' || o.status === selectedStatus
@@ -75,9 +100,11 @@ export default function CookDashboard() {
     { key: 'delivering', ar: 'في الطريق', en: 'Delivering' },
   ];
 
- const MAIN_TABS: { key: MainTab; ar: string; en: string; icon: LucideIcon }[] = [
+  const MAIN_TABS: { key: MainTab; ar: string; en: string; icon: LucideIcon }[] = [
     { key: 'orders', ar: 'الطلبات', en: 'Orders', icon: Package },
     { key: 'menu', ar: 'قائمتي', en: 'My Menu', icon: ChefHat },
+    { key: 'reviews', ar: 'التقييمات', en: 'Reviews', icon: Star },
+    { key: 'earnings', ar: 'الأرباح', en: 'Earnings', icon: DollarSign },
   ];
 
   return (
@@ -119,16 +146,16 @@ export default function CookDashboard() {
         newCustomers={3}
       />
 
-      {/* التبويبات الرئيسية: الطلبات / قائمتي */}
-      <div className="flex gap-2 mb-8 border-b border-gold/15">
+      {/* التبويبات الرئيسية */}
+      <div className="flex gap-2 mb-8 border-b border-gold/15 overflow-x-auto">
         {MAIN_TABS.map((tb) => {
           const Icon = tb.icon;
           const isActive = activeTab === tb.key;
           return (
             <button
               key={tb.key}
-              onClick={() => setActiveTab(tb.key)}
-              className="relative px-6 py-3 font-tajawal text-sm font-bold transition-colors flex items-center gap-2"
+              onClick={() => handleTabChange(tb.key)}
+              className="relative px-5 py-3 font-tajawal text-sm font-bold transition-colors flex items-center gap-2 whitespace-nowrap"
               style={{
                 color: isActive ? '#F5D76E' : 'rgba(255, 255, 255, 0.5)',
               }}
@@ -147,9 +174,11 @@ export default function CookDashboard() {
       </div>
 
       {/* المحتوى حسب التبويب */}
-      {activeTab === 'menu' ? (
-        <MenuManager />
-      ) : (
+      {activeTab === 'menu' && <MenuManager />}
+      {activeTab === 'reviews' && <ReviewsPanel />}
+      {activeTab === 'earnings' && <EarningsPanel />}
+
+      {activeTab === 'orders' && (
         <>
           {/* تبويبات الطلبات الفرعية */}
           <motion.div

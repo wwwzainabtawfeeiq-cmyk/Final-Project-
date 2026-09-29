@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import { Shield, LayoutDashboard, Users, ShoppingBag, ChefHat } from 'lucide-react';
@@ -6,12 +7,35 @@ import { useLanguage } from '@/context/LanguageContext';
 import AdminStats from '@/components/admin/AdminStats';
 import UsersManager from '@/components/admin/UsersManager';
 import AllOrdersManager from '@/components/admin/AllOrdersManager';
+import CooksManager from '@/components/admin/CooksManager';
 
 type TabKey = 'overview' | 'users' | 'orders' | 'cooks';
 
+const VALID_TABS: TabKey[] = ['overview', 'users', 'orders', 'cooks'];
+
 export default function AdminDashboard() {
   const { t, lang } = useLanguage();
-  const [tab, setTab] = useState<TabKey>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // قراءة التبويب من URL
+  const initialTab = (searchParams.get('tab') as TabKey) || 'overview';
+  const [tab, setTab] = useState<TabKey>(
+    VALID_TABS.includes(initialTab) ? initialTab : 'overview'
+  );
+
+  // مزامنة التبويب عند تغيير URL
+  useEffect(() => {
+    const urlTab = searchParams.get('tab') as TabKey;
+    if (urlTab && VALID_TABS.includes(urlTab) && urlTab !== tab) {
+      setTab(urlTab);
+    }
+  }, [searchParams, tab]);
+
+  // تغيير التبويب + تحديث URL
+  const handleTabChange = (newTab: TabKey) => {
+    setTab(newTab);
+    setSearchParams({ tab: newTab });
+  };
 
   const TABS: { key: TabKey; ar: string; en: string; icon: LucideIcon }[] = [
     { key: 'overview', ar: 'نظرة عامة', en: 'Overview', icon: LayoutDashboard },
@@ -56,7 +80,7 @@ export default function AdminDashboard() {
           return (
             <button
               key={tb.key}
-              onClick={() => setTab(tb.key)}
+              onClick={() => handleTabChange(tb.key)}
               className="relative px-5 py-3 font-tajawal text-sm font-bold transition-colors flex items-center gap-2 whitespace-nowrap"
               style={{
                 color: isActive ? '#F5D76E' : 'rgba(255, 255, 255, 0.5)',
@@ -109,21 +133,7 @@ export default function AdminDashboard() {
 
       {tab === 'users' && <UsersManager />}
       {tab === 'orders' && <AllOrdersManager />}
-      {tab === 'cooks' && (
-        <div className="text-center py-16">
-          <ChefHat
-            size={48}
-            className="mx-auto mb-4"
-            style={{ color: 'rgba(201, 162, 39, 0.4)' }}
-          />
-          <p
-            className="font-tajawal text-lg"
-            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
-          >
-            {t('إدارة الطُهاة قادمة قريبًا', 'Cooks manager coming soon')}
-          </p>
-        </div>
-      )}
+      {tab === 'cooks' && <CooksManager />}
     </div>
   );
 }
