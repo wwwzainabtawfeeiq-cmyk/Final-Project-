@@ -25,7 +25,6 @@ export default function Hero() {
     return () => window.removeEventListener('mousemove', handleMove);
   }, []);
 
-  // تأثير الكتابة
   const fullText = t('نكهات البصرة الحقيقية', 'Authentic Basra Flavors');
   const [typed, setTyped] = useState('');
   useEffect(() => {
@@ -39,7 +38,7 @@ export default function Hero() {
       }
     }, 80);
     return () => clearInterval(timer);
-  }, [lang]);
+  }, [lang, fullText]);
 
   const Arrow = lang === 'ar' ? ArrowLeft : ArrowRight;
 
@@ -51,7 +50,6 @@ export default function Hero() {
 
   return (
     <section ref={heroRef} className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
-      {/* خلفية طبق بصري */}
       <div className="absolute inset-0">
         <img
           src="https://images.pexels.com/photos/36796430/pexels-photo-36796430.jpeg?auto=compress&cs=tinysrgb&h=900&w=1400"
@@ -62,7 +60,6 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-deep/60 to-transparent" />
       </div>
 
-      {/* spotlight يتبع الماوس */}
       <div
         className="absolute inset-0 transition-all duration-300 pointer-events-none"
         style={{
@@ -70,19 +67,7 @@ export default function Hero() {
         }}
       />
 
-      {/* المحتوى */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 text-center py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-light mb-6"
-        >
-          <Sparkles size={16} className="text-gold-bright" />
-          <span className="font-tajawal text-sm text-gold-bright">{t('أصالة الماضي بعبق الحاضر', 'Authenticity meets the present')}</span>
-        </motion.div>
-
-        {/* عنوان typewriter */}
         <h1 className="font-ruqaa text-5xl md:text-7xl lg:text-8xl text-gradient-gold text-glow-gold mb-6 min-h-[1.2em]">
           {typed}
           <motion.span
@@ -98,10 +83,12 @@ export default function Hero() {
           transition={{ delay: 1, duration: 0.8 }}
           className="text-cream/70 text-lg md:text-xl font-tajawal mb-10 max-w-2xl mx-auto"
         >
-          {t('أطباق منزلية بصري أصيلة، محضّرة بأيدي طُهاة محترفين، تصل إلى بابك ساخنة وطازجة.', 'Authentic homemade Basra dishes, prepared by expert cooks, delivered hot and fresh to your door.')}
+          {t(
+            'أطباق منزلية بصري أصيلة، محضّرة بأيدي طُهاة محترفين، تصل إلى بابك ساخنة وطازجة.',
+            'Authentic homemade Basra dishes, prepared by expert cooks, delivered hot and fresh to your door.'
+          )}
         </motion.p>
 
-        {/* أزرار */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -127,7 +114,6 @@ export default function Hero() {
           </Link>
         </motion.div>
 
-        {/* أرقام متحركة */}
         <motion.div
           ref={statsRef}
           initial={{ opacity: 0, y: 30 }}

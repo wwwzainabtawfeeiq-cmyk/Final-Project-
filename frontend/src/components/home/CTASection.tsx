@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function CTASection() {
@@ -18,22 +18,22 @@ export default function CTASection() {
         style={{ background: 'linear-gradient(135deg, #1B4332 0%, #0F2419 50%, #1B4332 100%)' }}
       >
         {/* توهج ذهبي */}
-        <div className="absolute inset-0 opacity-30" style={{ background: 'radial-gradient(circle at 50% 50%, rgba(201,162,39,0.2), transparent 70%)' }} />
-
-        <motion.div
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          className="relative z-10 inline-flex items-center gap-2 px-4 py-2 rounded-full glass-light mb-6"
-        >
-          <Sparkles size={18} className="text-gold-bright" />
-          <span className="font-tajawal text-sm text-gold-bright">{t('ابدأ رحلتك', 'Start Your Journey')}</span>
-        </motion.div>
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: 'radial-gradient(circle at 50% 50%, rgba(201,162,39,0.2), transparent 70%)',
+          }}
+        />
 
         <h2 className="relative z-10 font-ruqaa text-4xl md:text-6xl text-gradient-gold text-glow-gold mb-4">
           {t('جاهز لتذوق النكهة الحقيقية؟', 'Ready to Taste the Real Flavor?')}
         </h2>
+
         <p className="relative z-10 text-cream/70 font-tajawal text-lg mb-8 max-w-xl mx-auto">
-          {t('انضم إلى آلاف العملاء السعداء واطلب من نكهة البصرة اليوم', 'Join thousands of happy customers and order from Basra Flavor today')}
+          {t(
+            'انضم إلى آلاف العملاء السعداء واطلب من نكهة البصرة اليوم',
+            'Join thousands of happy customers and order from Basra Flavor today'
+          )}
         </p>
 
         <Link

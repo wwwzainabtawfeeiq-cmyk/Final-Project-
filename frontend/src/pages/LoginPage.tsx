@@ -1,101 +1,228 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { User, ChefHat, Shield, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 
+type Portal = 'customer' | 'cook' | 'admin';
+
 export default function LoginPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const Arrow = lang === 'ar' ? ArrowLeft : ArrowRight;
+
+  const [portal, setPortal] = useState<Portal>('customer');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPass, setShowPass] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) {
-      toast.error(t('يرجى ملء جميع الحقول', 'Please fill all fields'));
-      return;
-    }
-    login(email);
-    toast.success(t('مرحباً بك في نكهة البصرة', 'Welcome to Basra Flavor'));
-    navigate('/');
-  };
+  const handleLogin = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  // التحقق من البريد الإلكتروني
+  const emailRegex = /^[^\s@]+@[^\s@]+\.(com|net|org|iq|edu)$/i;
+  if (!emailRegex.test(email)) {
+    toast.error(
+      t(
+        'يرجى إدخال بريد إلكتروني صحيح (مثال: name@example.com)',
+        'Please enter a valid email (e.g., name@example.com)'
+      )
+    );
+    return;
+  }
+
+  // التحقق من كلمة المرور
+  if (password.length < 6) {
+    toast.error(
+      t('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'Password must be at least 6 characters')
+    );
+    return;
+  }
+
+  login(email, email.split('@')[0], portal);
+
+  if (portal === 'cook') navigate('/cook-dashboard');
+  else if (portal === 'admin') navigate('/admin');
+  else navigate('/');
+};
+  const PORTALS = [
+    {
+      id: 'customer' as Portal,
+      label: t('عميل', 'Customer'),
+      icon: User,
+      desc: t('اطلب أطباقك', 'Order dishes'),
+      gradient: 'linear-gradient(135deg, #1B4332, #2D5A3D)',
+    },
+    {
+      id: 'cook' as Portal,
+      label: t('طباخ', 'Cook'),
+      icon: ChefHat,
+      desc: t('أدر مطبخك', 'Manage kitchen'),
+      gradient: 'linear-gradient(135deg, #C9A227, #F5D76E)',
+    },
+    {
+      id: 'admin' as Portal,
+      label: t('مدير', 'Admin'),
+      icon: Shield,
+      desc: t('تحكم كامل', 'Full control'),
+      gradient: 'linear-gradient(135deg, #8B6914, #5C3A21)',
+    },
+  ];
+
+  const currentPortal = PORTALS.find((p) => p.id === portal)!;
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-20 relative overflow-hidden">
-      {/* خلفية متدرجة */}
-      <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 50% 30%, rgba(27,67,50,0.4), #0F2419)' }} />
-      {/* جزيئات ذهبية */}
-      {Array.from({ length: 15 }).map((_, i) => (
-        <motion.div key={i} className="absolute rounded-full bg-gold/20 blur-[3px]"
-          style={{ left: `${Math.random()*100}%`, top: `${Math.random()*100}%`, width: 4, height: 4 }}
-          animate={{ y: [0, -30, 0], opacity: [0.1, 0.5, 0.1] }}
-          transition={{ duration: 5 + Math.random()*3, repeat: Infinity, delay: Math.random()*2 }}
-        />
-      ))}
+    <div
+      className="min-h-screen flex items-center justify-center px-4 py-10"
+      style={{ background: 'linear-gradient(135deg, #0F2419 0%, #1B4332 100%)' }}
+    >
+      <div className="w-full max-w-4xl">
+        {/* العنوان */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-10"
+        >
+          <h1 className="font-ruqaa text-5xl md:text-6xl text-gradient-gold text-glow-gold mb-3">
+            {t('نكهة البصرة', 'Basra Flavor')}
+          </h1>
+          <p className="font-tajawal text-cream/60">
+            {t('اختر نوع الحساب للدخول', 'Choose your account type')}
+          </p>
+        </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 w-full max-w-md glass-light rounded-3xl p-8 md:p-10"
-        style={{ border: '1px solid transparent', backgroundImage: 'linear-gradient(#0F2419, #0F2419), linear-gradient(135deg, #C9A227, #F5D76E, #C9A227)', backgroundOrigin: 'border-box', backgroundClip: 'padding-box, border-box' }}
-      >
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-4 gold-glow"
-            style={{ background: 'linear-gradient(135deg, #1B4332, #0F2419)', border: '2px solid #C9A227' }}>
-            <span className="font-ruqaa text-5xl text-gradient-gold">ن</span>
-          </div>
-          <h1 className="font-ruqaa text-3xl text-gradient-gold">{t('تسجيل الدخول', 'Login')}</h1>
-          <p className="text-cream/60 font-tajawal text-sm mt-2">{t('مرحباً بعودتك إلى نكهة البصرة', 'Welcome back to Basra Flavor')}</p>
+        {/* اختيار البوابة */}
+        <div className="grid grid-cols-3 gap-3 md:gap-4 mb-8 max-w-3xl mx-auto">
+          {PORTALS.map((p, i) => {
+            const Icon = p.icon;
+            const isActive = portal === p.id;
+            return (
+              <motion.button
+                key={p.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * i }}
+                onClick={() => setPortal(p.id)}
+                className={`relative rounded-2xl p-4 md:p-5 text-center transition-all duration-300 ${
+                  isActive ? 'scale-105' : 'opacity-60 hover:opacity-100'
+                }`}
+                style={{
+                  background: isActive ? p.gradient : 'rgba(15, 36, 25, 0.6)',
+                  border: isActive
+                    ? '2px solid rgba(201, 162, 39, 0.6)'
+                    : '1px solid rgba(201, 162, 39, 0.2)',
+                  boxShadow: isActive ? '0 15px 40px rgba(201, 162, 39, 0.4)' : 'none',
+                }}
+              >
+                <Icon
+                  size={28}
+                  className={
+                    isActive
+                      ? 'text-white mx-auto mb-2'
+                      : 'text-gold-bright mx-auto mb-2'
+                  }
+                />
+                <div
+                  className={`font-ruqaa text-lg md:text-xl ${
+                    isActive ? 'text-white' : 'text-cream/70'
+                  }`}
+                >
+                  {p.label}
+                </div>
+                <div
+                  className={`font-tajawal text-[10px] md:text-xs mt-1 ${
+                    isActive ? 'text-white/80' : 'text-cream/40'
+                  }`}
+                >
+                  {p.desc}
+                </div>
+              </motion.button>
+            );
+          })}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* البريد */}
-          <div>
-            <label className="block text-cream/70 font-tajawal text-sm mb-2">{t('البريد الإلكتروني', 'Email')}</label>
-            <div className="relative">
-              <Mail size={18} className="absolute top-1/2 -translate-y-1/2 right-3 text-gold/50" />
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder={t('example@email.com', 'example@email.com')}
-                className="w-full bg-emerald-deep/50 border border-gold/20 rounded-xl py-3 pr-11 pl-4 text-cream font-tajawal focus:border-gold focus:outline-none focus:gold-glow transition-all" />
+        {/* نموذج الدخول */}
+        <motion.div
+          key={portal}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="max-w-md mx-auto rounded-3xl p-8"
+          style={{
+            background: 'rgba(15, 36, 25, 0.8)',
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(201, 162, 39, 0.3)',
+          }}
+        >
+          <h2 className="font-ruqaa text-2xl text-gradient-gold mb-6 text-center">
+            {t('دخول', 'Login as')} {currentPortal.label}
+          </h2>
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <label className="block font-tajawal text-sm text-cream/80 mb-2">
+                {t('البريد الإلكتروني', 'Email')}
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder={t('أدخل بريدك الإلكتروني', 'Enter your email')}
+                className="w-full px-5 py-3 rounded-xl font-tajawal"
+              />
             </div>
-          </div>
 
-          {/* كلمة المرور */}
-          <div>
-            <label className="block text-cream/70 font-tajawal text-sm mb-2">{t('كلمة المرور', 'Password')}</label>
-            <div className="relative">
-              <Lock size={18} className="absolute top-1/2 -translate-y-1/2 right-3 text-gold/50" />
-              <input type={showPass ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-emerald-deep/50 border border-gold/20 rounded-xl py-3 pr-11 pl-11 text-cream font-tajawal focus:border-gold focus:outline-none focus:gold-glow transition-all" />
-              <button type="button" onClick={() => setShowPass(!showPass)}
-                className="absolute top-1/2 -translate-y-1/2 left-3 text-gold/50 hover:text-gold-bright">
-                {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
+            <div>
+              <label className="block font-tajawal text-sm text-cream/80 mb-2">
+                {t('كلمة المرور', 'Password')}
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder={t('أدخل كلمة المرور', 'Enter your password')}
+                className="w-full px-5 py-3 rounded-xl font-tajawal"
+              />
             </div>
+
+            <button
+              type="submit"
+              className="w-full py-4 rounded-full font-tajawal font-bold text-lg text-emerald-deep transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
+              style={{ background: 'linear-gradient(135deg, #C9A227, #F5D76E)' }}
+            >
+              {t('دخول', 'Login')}
+              <Arrow size={20} />
+            </button>
+          </form>
+
+          <div className="mt-6 text-center font-tajawal text-sm space-y-2">
+            <Link
+              to="#"
+              className="block text-cream/50 hover:text-gold-bright transition-colors"
+            >
+              {t('نسيت كلمة المرور؟', 'Forgot password?')}
+            </Link>
+            <p className="text-cream/60">
+              {t('ليس لديك حساب؟', "Don't have an account?")}{' '}
+              <Link
+                to="/register"
+                className="text-gold-bright font-bold hover:underline"
+              >
+                {t('سجّل الآن', 'Register now')}
+              </Link>
+            </p>
           </div>
+        </motion.div>
 
-          <button type="submit"
-            className="w-full py-3.5 rounded-xl font-tajawal font-bold text-lg relative overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #C9A227, #F5D76E)' }}>
-            <span className="relative z-10 text-emerald-deep">{t('دخول', 'Login')}</span>
-            <span className="absolute inset-0 shine-bg" />
-          </button>
-        </form>
-
-        <p className="text-center text-cream/60 font-tajawal text-sm mt-6">
-          {t('ليس لديك حساب؟', 'Don\'t have an account?')}{' '}
-          <Link to="/register" className="text-gold-bright hover:text-glow-gold font-bold transition-all">
-            {t('أنشئ حساباً', 'Register')}
-          </Link>
+        <p className="text-center font-tajawal text-xs text-cream/30 mt-8">
+          © 2026 {t('نكهة البصرة', 'Basra Flavor')} —{' '}
+          {t('جميع الحقوق محفوظة', 'All rights reserved')}
         </p>
-      </motion.div>
+      </div>
     </div>
   );
 }

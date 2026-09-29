@@ -5,17 +5,24 @@ import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import { useFavorites } from '@/context/FavoritesContext';
 import { useCart } from '@/context/CartContext';
+import CustomerBadge from '@/components/loyalty/CustomerBadge';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
 
 export default function ProfilePage() {
   const { t } = useLanguage();
   const { user, logout } = useAuth();
   const { favorites } = useFavorites();
-  const { count } = useCart();
+   useCart();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
   if (!user) {
-    navigate('/login');
     return null;
   }
 
@@ -40,8 +47,13 @@ export default function ProfilePage() {
       >
         {/* رأس */}
         <div className="flex items-center gap-6 mb-8">
-          <div className="w-24 h-24 rounded-full flex items-center justify-center gold-glow"
-            style={{ background: 'linear-gradient(135deg, #1B4332, #0F2419)', border: '3px solid #C9A227' }}>
+          <div
+            className="w-24 h-24 rounded-full flex items-center justify-center gold-glow"
+            style={{
+              background: 'linear-gradient(135deg, #1B4332, #0F2419)',
+              border: '3px solid #C9A227',
+            }}
+          >
             <User size={40} className="text-gold-bright" />
           </div>
           <div>
@@ -49,10 +61,17 @@ export default function ProfilePage() {
             <p className="text-cream/60 font-tajawal flex items-center gap-2 mt-1">
               <Mail size={14} /> {user.email}
             </p>
-            {user.phone && <p className="text-cream/60 font-tajawal flex items-center gap-2 mt-1">
-              <Phone size={14} /> {user.phone}
-            </p>}
+            {user.phone && (
+              <p className="text-cream/60 font-tajawal flex items-center gap-2 mt-1">
+                <Phone size={14} /> {user.phone}
+              </p>
+            )}
           </div>
+        </div>
+
+        {/* شارة الولاء */}
+        <div className="mb-8">
+          <CustomerBadge ordersCount={24} />
         </div>
 
         {/* إحصائيات */}
@@ -68,15 +87,24 @@ export default function ProfilePage() {
 
         {/* أزرار */}
         <div className="space-y-3">
-          <button onClick={() => navigate('/orders')} className="w-full flex items-center gap-3 p-4 rounded-xl glass hover:gold-glow transition-all">
+          <button
+            onClick={() => navigate('/orders')}
+            className="w-full flex items-center gap-3 p-4 rounded-xl glass hover:gold-glow transition-all"
+          >
             <ShoppingBag size={20} className="text-gold-bright" />
             <span className="font-tajawal text-cream">{t('طلباتي', 'My Orders')}</span>
           </button>
-          <button onClick={() => navigate('/favorites')} className="w-full flex items-center gap-3 p-4 rounded-xl glass hover:gold-glow transition-all">
+          <button
+            onClick={() => navigate('/favorites')}
+            className="w-full flex items-center gap-3 p-4 rounded-xl glass hover:gold-glow transition-all"
+          >
             <Heart size={20} className="text-gold-bright" />
             <span className="font-tajawal text-cream">{t('المفضلة', 'Favorites')}</span>
           </button>
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 p-4 rounded-xl glass hover:bg-red-900/30 transition-all">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 p-4 rounded-xl glass hover:bg-red-900/30 transition-all"
+          >
             <LogOut size={20} className="text-red-400" />
             <span className="font-tajawal text-red-400">{t('تسجيل الخروج', 'Logout')}</span>
           </button>

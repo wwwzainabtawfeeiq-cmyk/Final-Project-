@@ -100,4 +100,70 @@ body {
 /* خط مضغوط للعناوين */
 .font-ruqaa {
   font-family: 'Aref Ruqaa', serif !important;
+  /* ===== حقول الإدخال ===== */
+input,
+textarea,
+select {
+  color: #FAF6ED !important;
+  background-color: rgba(15, 36, 25, 0.6) !important;
+  border-color: rgba(201, 162, 39, 0.3) !important;
+  caret-color: #F5D76E !important;
+  font-family: 'Tajawal', sans-serif !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(250, 246, 237, 0.4) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #F5D76E !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2) !important;
+  background-color: rgba(15, 36, 25, 0.8) !important;
+}
+
+/* إصلاح حقول التاريخ والوقت */
+input[type="date"],
+input[type="time"],
+input[type="number"] {
+  color-scheme: dark;
+}
+
+/* إصلاح select */
+select option {
+  background-color: #0F2419;
+  color: #FAF6ED;
+}
+}
+/* ===== Placeholders ===== */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(250, 246, 237, 0.4) !important;
+  font-family: 'Tajawal', sans-serif !important;
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+  color: rgba(250, 246, 237, 0.6) !important;
+}
+
+/* ===== حقول الإدخال العامة ===== */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea {
+  color: #FFFFFF !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(201, 162, 39, 0.35) !important;
+  caret-color: #F5D76E !important;
+  font-family: 'Tajawal', sans-serif !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):focus,
+textarea:focus {
+  border-color: #F5D76E !important;
+  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2) !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  outline: none !important;
 }

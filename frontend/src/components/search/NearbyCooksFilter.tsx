@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { LocateFixed, Loader2 } from "lucide-react";
+import { useState } from 'react';
+import { LocateFixed, Loader2 } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export type Coords = { lat: number; lng: number };
 
@@ -10,11 +11,18 @@ export function distanceKm(a: Coords, b: Coords) {
   const dLng = ((b.lng - a.lng) * Math.PI) / 180;
   const lat1 = (a.lat * Math.PI) / 180;
   const lat2 = (b.lat * Math.PI) / 180;
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
   return Math.round(R * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h)) * 10) / 10;
 }
 
-export default function NearbyCooksFilter({ onLocate }: { onLocate: (coords: Coords | null) => void }) {
+interface NearbyCooksFilterProps {
+  onLocate: (coords: Coords | null) => void;
+}
+
+export default function NearbyCooksFilter({ onLocate }: NearbyCooksFilterProps) {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +34,7 @@ export default function NearbyCooksFilter({ onLocate }: { onLocate: (coords: Coo
       return;
     }
     if (!navigator.geolocation) {
-      setError("المتصفح لا يدعم تحديد الموقع");
+      setError(t('المتصفح لا يدعم تحديد الموقع', 'Browser does not support location'));
       return;
     }
     setLoading(true);
@@ -39,7 +47,12 @@ export default function NearbyCooksFilter({ onLocate }: { onLocate: (coords: Coo
       },
       () => {
         setLoading(false);
-        setError("تعذر الوصول لموقعك، تأكد من صلاحية الموقع بالمتصفح");
+        setError(
+          t(
+            'تعذر الوصول لموقعك، تأكد من صلاحية الموقع',
+            'Could not get your location'
+          )
+        );
       }
     );
   };
@@ -49,12 +62,18 @@ export default function NearbyCooksFilter({ onLocate }: { onLocate: (coords: Coo
       <button
         onClick={toggle}
         className={
-          "flex items-center gap-2 rounded-full px-4 py-2.5 text-sm border transition-colors " +
-          (active ? "bg-gold text-black-deep border-gold" : "border-gold/25 text-cream/70 hover:border-gold hover:text-gold")
+          'flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-tajawal border transition-colors ' +
+          (active
+            ? 'bg-gold text-emerald-deep border-gold font-bold'
+            : 'border-gold/25 text-cream/70 hover:border-gold hover:text-gold-bright')
         }
       >
-        {loading ? <Loader2 size={15} className="animate-spin" /> : <LocateFixed size={15} />}
-        الأقرب إليّ
+        {loading ? (
+          <Loader2 size={15} className="animate-spin" />
+        ) : (
+          <LocateFixed size={15} />
+        )}
+        {t('الأقرب إليّ', 'Nearby')}
       </button>
       {error && <span className="text-[11px] text-red-400 mt-1">{error}</span>}
     </div>

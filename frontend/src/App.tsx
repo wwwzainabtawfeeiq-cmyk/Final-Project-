@@ -9,19 +9,22 @@ import { FavoritesProvider } from '@/context/FavoritesContext';
 import Layout from '@/components/common/Layout';
 import CartDrawer from '@/components/cart/CartDrawer';
 import SplashScreen from '@/components/common/SplashScreen';
-
+import WelcomeOffersModal from '@/components/offers/WelcomeOffersModal';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import RegisterPage from '@/pages/RegisterPage';
 import MealsPage from '@/pages/MealsPage';
 import CooksPage from '@/pages/CooksPage';
+import CookProfilePage from '@/pages/CookProfilePage';
+import CookDashboard from '@/pages/CookDashboard';
 import FavoritesPage from '@/pages/FavoritesPage';
 import CheckoutPage from '@/pages/CheckoutPage';
 import OrdersPage from '@/pages/OrdersPage';
 import ProfilePage from '@/pages/ProfilePage';
 import FlavorMatchPage from '@/pages/FlavorMatchPage';
+import OffersPage from '@/pages/OffersPage';
+import SubscriptionPage from '@/pages/SubscriptionPage';
 
-// انتقالات الصفحات
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -40,11 +43,15 @@ function AnimatedRoutes() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/meals" element={<MealsPage />} />
           <Route path="/cooks" element={<CooksPage />} />
+          <Route path="/cook/:id" element={<CookProfilePage />} />
+          <Route path="/cook-dashboard" element={<CookDashboard />} />
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/flavor-match" element={<FlavorMatchPage />} />
+          <Route path="/offers" element={<OffersPage />} />
+          <Route path="/subscriptions" element={<SubscriptionPage />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -53,15 +60,31 @@ function AnimatedRoutes() {
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    const seen = sessionStorage.getItem('bf_splash_seen');
-    if (seen) setShowSplash(false);
+    const splashSeen = sessionStorage.getItem('bf_splash_seen');
+    if (splashSeen) setShowSplash(false);
   }, []);
+
+  useEffect(() => {
+    if (!showSplash) {
+      const welcomeSeen = sessionStorage.getItem('bf_welcome_seen');
+      if (!welcomeSeen) {
+        const timer = setTimeout(() => setShowWelcome(true), 1500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [showSplash]);
 
   const handleSplashFinish = () => {
     sessionStorage.setItem('bf_splash_seen', 'true');
     setShowSplash(false);
+  };
+
+  const handleCloseWelcome = () => {
+    sessionStorage.setItem('bf_welcome_seen', 'true');
+    setShowWelcome(false);
   };
 
   return (
@@ -70,12 +93,15 @@ export default function App() {
         <CartProvider>
           <FavoritesProvider>
             {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+
             <BrowserRouter>
               <Layout>
                 <AnimatedRoutes />
               </Layout>
               <CartDrawer />
+              {showWelcome && <WelcomeOffersModal onClose={handleCloseWelcome} />}
             </BrowserRouter>
+
             <Toaster
               position="top-center"
               toastOptions={{
