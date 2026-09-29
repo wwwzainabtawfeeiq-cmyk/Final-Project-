@@ -21,11 +21,13 @@ import AdminDashboard from '@/pages/AdminDashboard';
 import FavoritesPage from '@/pages/FavoritesPage';
 import CheckoutPage from '@/pages/CheckoutPage';
 import OrdersPage from '@/pages/OrdersPage';
+import OrderDetailsPage from '@/pages/OrderDetailsPage';
 import ProfilePage from '@/pages/ProfilePage';
 import FlavorMatchPage from '@/pages/FlavorMatchPage';
 import OffersPage from '@/pages/OffersPage';
 import SubscriptionPage from '@/pages/SubscriptionPage';
-import OrderDetailsPage from '@/pages/OrderDetailsPage';
+import SurplusAndCharityPage from '@/pages/SurplusAndCharityPage';
+
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -50,12 +52,12 @@ function AnimatedRoutes() {
           <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-<Route path="/orders/:id" element={<OrderDetailsPage />} />
+          <Route path="/orders/:id" element={<OrderDetailsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/flavor-match" element={<FlavorMatchPage />} />
           <Route path="/offers" element={<OffersPage />} />
           <Route path="/subscriptions" element={<SubscriptionPage />} />
+          <Route path="/surplus-and-charity" element={<SurplusAndCharityPage />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

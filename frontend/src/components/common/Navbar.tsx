@@ -17,6 +17,7 @@ import {
   Star,
   DollarSign,
   Home,
+  HandHeart,
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
@@ -47,6 +48,7 @@ export default function Navbar() {
     { to: '/meals', label: t('الأطباق', 'Meals'), icon: ChefHat },
     { to: '/cooks', label: t('الطُهاة', 'Cooks'), icon: Users },
     { to: '/flavor-match', label: 'Flavor Match', icon: Sparkles },
+    { to: '/surplus-and-charity', label: t('الفائض والخير', 'Surplus & Charity'), icon: HandHeart },
     { to: '/offers', label: t('العروض', 'Offers'), icon: Tag },
     { to: '/orders', label: t('طلباتي', 'Orders'), icon: Package },
   ];
