@@ -6,6 +6,7 @@ import ScrollProgress from './ScrollProgress';
 import CustomCursor from './CustomCursor';
 import BackToTop from './BackToTop';
 import AnnouncementBar from './AnnouncementBar';
+import NotificationBar from './NotificationBar';
 import TourButton from '../tour/TourButton';
 
 export default function Layout({ children }: { children?: ReactNode }) {
@@ -15,7 +16,8 @@ export default function Layout({ children }: { children?: ReactNode }) {
       <CustomCursor />
       <AnnouncementBar />
       <Navbar />
-      <main className="flex-1 pt-16">
+      <NotificationBar />
+      <main className="flex-1 pt-20">
         {children || <Outlet />}
       </main>
       <Footer />

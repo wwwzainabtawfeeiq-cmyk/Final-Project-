@@ -1,4 +1,3 @@
-
 export interface Meal {
   id: number;
   name: string;
@@ -146,7 +145,7 @@ export const meals: Meal[] = [
     id: 2,
     name: 'قوزي بغدادي',
     nameEn: 'Quzi Baghdadi',
-    description: 'لحم الخروف المطبوء على الأرز البسمتي مع المكسرات والزبيب',
+    description: 'لحم الخروف المطبوخ على الأرز البسمتي مع المكسرات والزبيب',
     descriptionEn: 'Slow-cooked lamb over basmati rice with nuts and raisins',
     price: 22000,
     image: 'https://images.pexels.com/photos/5639251/pexels-photo-5639251.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
@@ -232,7 +231,7 @@ export const meals: Meal[] = [
     id: 8,
     name: 'كليجة بالتمر',
     nameEn: 'Kleija with Dates',
-    description: 'كليجة محشوة بعجينة التمر مع الهيل والهيل',
+    description: 'كليجة محشوة بعجينة التمر مع الهيل',
     descriptionEn: 'Date-filled kleija with cardamom',
     price: 7000,
     image: 'https://images.pexels.com/photos/10865939/pexels-photo-10865939.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',

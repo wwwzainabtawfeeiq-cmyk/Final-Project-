@@ -2,7 +2,7 @@ import type { LucideIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChefHat, Package, Clock, Star, DollarSign } from 'lucide-react';
+import { ChefHat, Package, Clock, Star, DollarSign, Grid3X3 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useAuth } from '@/context/AuthContext';
 import CookStats from '@/components/cook/CookStats';
@@ -10,6 +10,7 @@ import CookBadge from '@/components/loyalty/CookBadge';
 import MenuManager from '@/components/cook/MenuManager';
 import ReviewsPanel from '@/components/cook/ReviewsPanel';
 import EarningsPanel from '@/components/cook/EarningsPanel';
+import CookOrdersKanban from '@/components/cook/CookOrdersKanban';
 
 // ====== طلبات تجريبية ======
 const mockOrders = [
@@ -59,6 +60,7 @@ const STATUS_CONFIG = {
 };
 
 type MainTab = 'orders' | 'menu' | 'reviews' | 'earnings';
+type ViewMode = 'list' | 'kanban';
 
 const VALID_TABS: MainTab[] = ['orders', 'menu', 'reviews', 'earnings'];
 
@@ -67,12 +69,12 @@ export default function CookDashboard() {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // قراءة التبويب من URL
   const initialTab = (searchParams.get('tab') as MainTab) || 'orders';
   const [activeTab, setActiveTab] = useState<MainTab>(
     VALID_TABS.includes(initialTab) ? initialTab : 'orders'
   );
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
 
   // مزامنة التبويب عند تغيير URL
   useEffect(() => {
@@ -80,9 +82,12 @@ export default function CookDashboard() {
     if (urlTab && VALID_TABS.includes(urlTab) && urlTab !== activeTab) {
       setActiveTab(urlTab);
     }
-    
   }, [searchParams, activeTab]);
 
+  // رفع الصفحة للأعلى عند تغيير التبويب
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
 
   const handleTabChange = (newTab: MainTab) => {
     setActiveTab(newTab);
@@ -181,163 +186,203 @@ export default function CookDashboard() {
 
       {activeTab === 'orders' && (
         <>
-          {/* تبويبات الطلبات الفرعية */}
+          {/* تبديل قائمة / كانبان */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
             className="mb-6"
           >
-            <h2 className="font-ruqaa text-2xl text-gradient-gold mb-4 flex items-center gap-2">
-              <Package size={24} /> {t('طلبات اليوم', "Today's Orders")}
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-ruqaa text-2xl text-gradient-gold flex items-center gap-2">
+                <Package size={24} /> {t('طلبات اليوم', "Today's Orders")}
+              </h2>
 
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {orderTabs.map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setSelectedStatus(tab.key)}
-                  className="px-4 py-2 rounded-full font-tajawal text-sm font-bold whitespace-nowrap transition-all"
-                  style={{
-                    background:
-                      selectedStatus === tab.key
-                        ? 'linear-gradient(135deg, #C9A227, #F5D76E)'
-                        : 'rgba(255, 255, 255, 0.08)',
-                    color:
-                      selectedStatus === tab.key
-                        ? '#0F2419'
-                        : 'rgba(255, 255, 255, 0.7)',
-                    border:
-                      selectedStatus === tab.key
-                        ? 'none'
-                        : '1px solid rgba(201, 162, 39, 0.25)',
-                  }}
-                >
-                  {lang === 'ar' ? tab.ar : tab.en}
-                </button>
-              ))}
+              <div className="flex gap-2">
+                {[
+                  { key: 'list' as ViewMode, ar: 'قائمة', en: 'List', icon: Package },
+                  { key: 'kanban' as ViewMode, ar: 'كانبان', en: 'Kanban', icon: Grid3X3 },
+                ].map((view) => {
+                  const Icon = view.icon;
+                  const isActive = viewMode === view.key;
+                  return (
+                    <button
+                      key={view.key}
+                      onClick={() => setViewMode(view.key)}
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-full font-tajawal text-xs font-bold transition-all"
+                      style={{
+                        background: isActive
+                          ? 'linear-gradient(135deg, #C9A227, #F5D76E)'
+                          : 'rgba(255, 255, 255, 0.08)',
+                        color: isActive
+                          ? '#0F2419'
+                          : 'rgba(255, 255, 255, 0.7)',
+                        border: isActive
+                          ? 'none'
+                          : '1px solid rgba(201, 162, 39, 0.25)',
+                      }}
+                    >
+                      <Icon size={14} /> {lang === 'ar' ? view.ar : view.en}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
+
+            {/* تبويبات الحالة (فقط في وضع القائمة) */}
+            {viewMode === 'list' && (
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {orderTabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setSelectedStatus(tab.key)}
+                    className="px-4 py-2 rounded-full font-tajawal text-sm font-bold whitespace-nowrap transition-all"
+                    style={{
+                      background:
+                        selectedStatus === tab.key
+                          ? 'linear-gradient(135deg, #C9A227, #F5D76E)'
+                          : 'rgba(255, 255, 255, 0.08)',
+                      color:
+                        selectedStatus === tab.key
+                          ? '#0F2419'
+                          : 'rgba(255, 255, 255, 0.7)',
+                      border:
+                        selectedStatus === tab.key
+                          ? 'none'
+                          : '1px solid rgba(201, 162, 39, 0.25)',
+                    }}
+                  >
+                    {lang === 'ar' ? tab.ar : tab.en}
+                  </button>
+                ))}
+              </div>
+            )}
           </motion.div>
 
-          {/* قائمة الطلبات */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredOrders.map((order, i) => {
-              const status =
-                STATUS_CONFIG[order.status as keyof typeof STATUS_CONFIG];
-              return (
-                <motion.div
-                  key={order.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                  className="rounded-2xl p-5"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(15, 36, 25, 0.8), rgba(27, 67, 50, 0.5))',
-                    border: '1px solid rgba(201, 162, 39, 0.2)',
-                  }}
-                >
-                  {/* رأس الطلب */}
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <p
-                        className="font-cairo text-base font-bold"
-                        style={{ color: '#F5D76E' }}
-                      >
-                        {order.id}
-                      </p>
-                      <p
-                        className="font-tajawal text-xs mt-1"
-                        style={{ color: 'rgba(255, 255, 255, 0.5)' }}
-                      >
-                        {order.customer}
-                      </p>
-                    </div>
-                    <span
-                      className="px-3 py-1 rounded-full text-xs font-tajawal font-bold"
-                      style={{
-                        background: status.bg,
-                        color: status.color,
-                        border: `1px solid ${status.color}40`,
-                      }}
-                    >
-                      {lang === 'ar' ? status.ar : status.en}
-                    </span>
-                  </div>
-
-                  {/* الأطباق */}
-                  <div className="space-y-1 mb-3">
-                    {order.items.map((item, idx) => (
-                      <p
-                        key={idx}
-                        className="font-tajawal text-sm"
-                        style={{ color: 'rgba(255, 255, 255, 0.8)' }}
-                      >
-                        • {item}
-                      </p>
-                    ))}
-                  </div>
-
-                  {/* العنوان */}
-                  <p
-                    className="font-tajawal text-xs mb-3"
-                    style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+          {/* كانبان أو قائمة */}
+          {viewMode === 'kanban' ? (
+            <CookOrdersKanban />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredOrders.map((order, i) => {
+                const status =
+                  STATUS_CONFIG[order.status as keyof typeof STATUS_CONFIG];
+                return (
+                  <motion.div
+                    key={order.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.08 }}
+                    className="rounded-2xl p-5"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(15, 36, 25, 0.8), rgba(27, 67, 50, 0.5))',
+                      border: '1px solid rgba(201, 162, 39, 0.2)',
+                    }}
                   >
-                    📍 {order.address}
-                  </p>
+                    {/* رأس الطلب */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <p
+                          className="font-cairo text-base font-bold"
+                          style={{ color: '#F5D76E' }}
+                        >
+                          {order.id}
+                        </p>
+                        <p
+                          className="font-tajawal text-xs mt-1"
+                          style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                        >
+                          {order.customer}
+                        </p>
+                      </div>
+                      <span
+                        className="px-3 py-1 rounded-full text-xs font-tajawal font-bold"
+                        style={{
+                          background: status.bg,
+                          color: status.color,
+                          border: `1px solid ${status.color}40`,
+                        }}
+                      >
+                        {lang === 'ar' ? status.ar : status.en}
+                      </span>
+                    </div>
 
-                  {/* الفوتر */}
-                  <div className="flex items-center justify-between pt-3 border-t border-gold/10">
-                    <span
-                      className="font-tajawal text-xs flex items-center gap-1"
+                    {/* الأطباق */}
+                    <div className="space-y-1 mb-3">
+                      {order.items.map((item, idx) => (
+                        <p
+                          key={idx}
+                          className="font-tajawal text-sm"
+                          style={{ color: 'rgba(255, 255, 255, 0.8)' }}
+                        >
+                          • {item}
+                        </p>
+                      ))}
+                    </div>
+
+                    {/* العنوان */}
+                    <p
+                      className="font-tajawal text-xs mb-3"
                       style={{ color: 'rgba(255, 255, 255, 0.5)' }}
                     >
-                      <Clock size={12} /> {order.time}
-                    </span>
-                    <span className="font-cairo text-lg text-gradient-gold">
-                      {order.total.toLocaleString()} د.ع
-                    </span>
-                  </div>
+                      📍 {order.address}
+                    </p>
 
-                  {/* أزرار الإجراءات */}
-                  {order.status === 'new' && (
-                    <div className="flex gap-2 mt-4">
+                    {/* الفوتر */}
+                    <div className="flex items-center justify-between pt-3 border-t border-gold/10">
+                      <span
+                        className="font-tajawal text-xs flex items-center gap-1"
+                        style={{ color: 'rgba(255, 255, 255, 0.5)' }}
+                      >
+                        <Clock size={12} /> {order.time}
+                      </span>
+                      <span className="font-cairo text-lg text-gradient-gold">
+                        {order.total.toLocaleString()} د.ع
+                      </span>
+                    </div>
+
+                    {/* الأزرار */}
+                    {order.status === 'new' && (
+                      <div className="flex gap-2 mt-4">
+                        <button
+                          className="flex-1 py-2.5 rounded-xl font-tajawal text-sm font-bold transition-all"
+                          style={{
+                            background:
+                              'linear-gradient(135deg, #C9A227, #F5D76E)',
+                            color: '#0F2419',
+                          }}
+                        >
+                          ✓ {t('قبول الطلب', 'Accept')}
+                        </button>
+                        <button
+                          className="px-4 py-2.5 rounded-xl font-tajawal text-sm font-bold"
+                          style={{
+                            border: '1px solid rgba(239, 68, 68, 0.4)',
+                            color: '#f87171',
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    )}
+                    {order.status === 'cooking' && (
                       <button
-                        className="flex-1 py-2.5 rounded-xl font-tajawal text-sm font-bold transition-all"
+                        className="w-full mt-4 py-2.5 rounded-xl font-tajawal text-sm font-bold"
                         style={{
                           background:
-                            'linear-gradient(135deg, #C9A227, #F5D76E)',
-                          color: '#0F2419',
+                            'linear-gradient(135deg, #22c55e, #16a34a)',
+                          color: '#FFFFFF',
                         }}
                       >
-                        ✓ {t('قبول الطلب', 'Accept')}
+                        ✓ {t('جاهز للتوصيل', 'Mark Ready')}
                       </button>
-                      <button
-                        className="px-4 py-2.5 rounded-xl font-tajawal text-sm font-bold"
-                        style={{
-                          border: '1px solid rgba(239, 68, 68, 0.4)',
-                          color: '#f87171',
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  )}
-                  {order.status === 'cooking' && (
-                    <button
-                      className="w-full mt-4 py-2.5 rounded-xl font-tajawal text-sm font-bold"
-                      style={{
-                        background: 'linear-gradient(135deg, #22c55e, #16a34a)',
-                        color: '#FFFFFF',
-                      }}
-                    >
-                      ✓ {t('جاهز للتوصيل', 'Mark Ready')}
-                    </button>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </>
       )}
     </div>

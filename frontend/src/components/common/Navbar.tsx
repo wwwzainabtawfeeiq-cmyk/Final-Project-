@@ -18,7 +18,7 @@ import {
   Home,
   HandHeart,
   RefreshCw,
-BookOpen,
+  BookOpen,
 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
@@ -49,32 +49,62 @@ export default function Navbar() {
     { to: '/meals', label: t('الأطباق', 'Meals'), icon: ChefHat },
     { to: '/cooks', label: t('الطُهاة', 'Cooks'), icon: Users },
     { to: '/flavor-match', label: 'Flavor Match', icon: Sparkles },
-    { to: '/surplus-and-charity', label: t('الفائض والخير', 'Surplus & Charity'), icon: HandHeart },
+    {
+      to: '/surplus-and-charity',
+      label: t('الفائض والخير', 'Surplus & Charity'),
+      icon: HandHeart,
+    },
     { to: '/offers', label: t('العروض', 'Offers'), icon: Tag },
     { to: '/orders', label: t('طلباتي', 'Orders'), icon: Package },
   ];
 
   // ====== روابط الطباخ ======
   const cookLinks = [
-    { to: '/cook-dashboard', label: t('لوحة التحكم', 'Dashboard'), icon: LayoutDashboard },
-    { to: '/cook-dashboard?tab=orders', label: t('الطلبات', 'Orders'), icon: Package },
-    { to: '/cook-dashboard?tab=menu', label: t('قائمتي', 'My Menu'), icon: ChefHat },
-    { to: '/cook-dashboard?tab=reviews', label: t('التقييمات', 'Reviews'), icon: Star },
-    { to: '/cook-dashboard?tab=earnings', label: t('الأرباح', 'Earnings'), icon: DollarSign },
-    { to: '/chef-barter', label: t('المقايضة', 'Barter'), icon: RefreshCw }, 
-    { to: '/secret-recipes', label: t('الوصفات السرية', 'Secret Recipes'), icon: BookOpen }, 
+    {
+      to: '/cook-dashboard',
+      label: t('لوحة التحكم', 'Dashboard'),
+      icon: LayoutDashboard,
+    },
+    {
+      to: '/cook-dashboard?tab=orders',
+      label: t('الطلبات', 'Orders'),
+      icon: Package,
+    },
+    {
+      to: '/cook-dashboard?tab=menu',
+      label: t('قائمتي', 'My Menu'),
+      icon: ChefHat,
+    },
+    {
+      to: '/cook-dashboard?tab=reviews',
+      label: t('التقييمات', 'Reviews'),
+      icon: Star,
+    },
+    {
+      to: '/cook-dashboard?tab=earnings',
+      label: t('الأرباح', 'Earnings'),
+      icon: DollarSign,
+    },
+    { to: '/chef-barter', label: t('المقايضة', 'Barter'), icon: RefreshCw },
+    {
+      to: '/secret-recipes',
+      label: t('الوصفات السرية', 'Secret Recipes'),
+      icon: BookOpen,
+    },
   ];
-
 
   // ====== روابط المدير ======
   const adminLinks = [
-    { to: '/admin', label: t('لوحة التحكم', 'Dashboard'), icon: LayoutDashboard },
+    {
+      to: '/admin',
+      label: t('لوحة التحكم', 'Dashboard'),
+      icon: LayoutDashboard,
+    },
     { to: '/admin?tab=users', label: t('المستخدمون', 'Users'), icon: Users },
     { to: '/admin?tab=orders', label: t('الطلبات', 'Orders'), icon: Package },
     { to: '/admin?tab=cooks', label: t('الطُهاة', 'Cooks'), icon: ChefHat },
-  { to: '/chef-barter', label: t('المقايضة', 'Barter'), icon: RefreshCw },  
-];
-
+    { to: '/chef-barter', label: t('المقايضة', 'Barter'), icon: RefreshCw },
+  ];
 
   const currentLinks = isCook ? cookLinks : isAdmin ? adminLinks : customerLinks;
 

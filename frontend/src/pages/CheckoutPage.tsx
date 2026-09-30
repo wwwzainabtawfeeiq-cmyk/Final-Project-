@@ -9,15 +9,25 @@ import {
   ShoppingBag,
   ArrowLeft,
   ArrowRight,
+  Settings,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useLanguage } from '@/context/LanguageContext';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/data/mockData';
 import { cn } from '@/utils/cn';
-import CustomerNotes, { type CustomerNotesValue } from '@/components/CheckOut/CustomerNotes';
-import Method, { type Value as PaymentValue } from '@/components/CheckOut/PaymentMethod';
-import EventDetailsForm, { type EventDetails } from '@/components/CheckOut/EventDetailsForm';
+import CustomerNotes, {
+  type CustomerNotesValue,
+} from '@/components/CheckOut/CustomerNotes';
+import Method, {
+  type Value as PaymentValue,
+} from '@/components/CheckOut/PaymentMethod';
+import EventDetailsForm, {
+  type EventDetails,
+} from '@/components/CheckOut/EventDetailsForm';
+import PreOrderModal, {
+  type PreOrderData,
+} from '@/components/CheckOut/PreOrderModal';
 
 // 🔥 نمط موحّد للحقول (مضمون)
 const INPUT_STYLE: React.CSSProperties = {
@@ -40,6 +50,13 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(0);
   const Arrow = lang === 'ar' ? ArrowLeft : ArrowRight;
 
+  // خيارات إضافية (جدولة، لشخص آخر)
+  const [preOrderOpen, setPreOrderOpen] = useState(false);
+  const [preOrderData, setPreOrderData] = useState<PreOrderData>({
+    isScheduled: false,
+    isForOther: false,
+  });
+
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -60,6 +77,7 @@ export default function CheckoutPage() {
     isEvent: false,
   });
 
+  // ✅ الخطوات نظيفة
   const steps = [
     { icon: MapPin, title: t('العنوان', 'Address') },
     { icon: Truck, title: t('التوصيل', 'Delivery') },
@@ -78,7 +96,9 @@ export default function CheckoutPage() {
           <button
             onClick={() => navigate('/meals')}
             className="px-6 py-3 rounded-full font-tajawal font-bold"
-            style={{ background: 'linear-gradient(135deg, #C9A227, #F5D76E)' }}
+            style={{
+              background: 'linear-gradient(135deg, #C9A227, #F5D76E)',
+            }}
           >
             <span className="text-emerald-deep">
               {t('تصفح الأطباق', 'Browse Meals')}
@@ -133,13 +153,18 @@ export default function CheckoutPage() {
                 )}
                 style={
                   i <= step
-                    ? { background: 'linear-gradient(135deg, #C9A227, #F5D76E)' }
+                    ? {
+                        background:
+                          'linear-gradient(135deg, #C9A227, #F5D76E)',
+                      }
                     : {}
                 }
               >
                 <s.icon
                   size={20}
-                  className={i <= step ? 'text-emerald-deep' : 'text-gold/50'}
+                  className={
+                    i <= step ? 'text-emerald-deep' : 'text-gold/50'
+                  }
                 />
               </div>
               <span
@@ -172,7 +197,7 @@ export default function CheckoutPage() {
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           className="glass-light rounded-2xl p-6 md:p-8"
         >
-          {/* الخطوة 1 */}
+          {/* الخطوة 1: العنوان */}
           {step === 0 && (
             <div className="space-y-4">
               <h2 className="font-ruqaa text-2xl text-gold-bright mb-4">
@@ -187,13 +212,17 @@ export default function CheckoutPage() {
                 style={INPUT_STYLE}
                 onFocus={(e) => {
                   e.currentTarget.style.borderColor = '#F5D76E';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201, 162, 39, 0.2)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.boxShadow =
+                    '0 0 0 3px rgba(201, 162, 39, 0.2)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.12)';
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(201, 162, 39, 0.35)';
+                  e.currentTarget.style.borderColor =
+                    'rgba(201, 162, 39, 0.35)';
                   e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.08)';
                 }}
               />
               <input
@@ -204,30 +233,40 @@ export default function CheckoutPage() {
                 style={INPUT_STYLE}
                 onFocus={(e) => {
                   e.currentTarget.style.borderColor = '#F5D76E';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201, 162, 39, 0.2)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.boxShadow =
+                    '0 0 0 3px rgba(201, 162, 39, 0.2)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.12)';
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(201, 162, 39, 0.35)';
+                  e.currentTarget.style.borderColor =
+                    'rgba(201, 162, 39, 0.35)';
                   e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.08)';
                 }}
               />
               <input
                 type="text"
                 placeholder={t('العنوان', 'Address')}
                 value={form.address}
-                onChange={(e) => setForm({ ...form, address: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, address: e.target.value })
+                }
                 style={INPUT_STYLE}
                 onFocus={(e) => {
                   e.currentTarget.style.borderColor = '#F5D76E';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201, 162, 39, 0.2)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.boxShadow =
+                    '0 0 0 3px rgba(201, 162, 39, 0.2)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.12)';
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(201, 162, 39, 0.35)';
+                  e.currentTarget.style.borderColor =
+                    'rgba(201, 162, 39, 0.35)';
                   e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.08)';
                 }}
               />
               <input
@@ -238,23 +277,79 @@ export default function CheckoutPage() {
                 style={INPUT_STYLE}
                 onFocus={(e) => {
                   e.currentTarget.style.borderColor = '#F5D76E';
-                  e.currentTarget.style.boxShadow = '0 0 0 3px rgba(201, 162, 39, 0.2)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.boxShadow =
+                    '0 0 0 3px rgba(201, 162, 39, 0.2)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.12)';
                 }}
                 onBlur={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(201, 162, 39, 0.35)';
+                  e.currentTarget.style.borderColor =
+                    'rgba(201, 162, 39, 0.35)';
                   e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
+                  e.currentTarget.style.backgroundColor =
+                    'rgba(255, 255, 255, 0.08)';
                 }}
               />
 
-              <EventDetailsForm value={eventValue} onChange={setEventValue} />
+              <EventDetailsForm
+                value={eventValue}
+                onChange={setEventValue}
+              />
 
-              <CustomerNotes value={notesValue} onChange={setNotesValue} />
+              <CustomerNotes
+                value={notesValue}
+                onChange={setNotesValue}
+              />
+
+              {/* خيارات إضافية */}
+              <button
+                type="button"
+                onClick={() => setPreOrderOpen(true)}
+                className="w-full py-3.5 rounded-xl font-tajawal font-bold text-sm flex items-center justify-center gap-2 transition-all hover:scale-[1.02]"
+                style={{
+                  border: '1px solid rgba(201, 162, 39, 0.4)',
+                  color: '#F5D76E',
+                  backgroundColor: 'rgba(201, 162, 39, 0.08)',
+                }}
+              >
+                <Settings size={16} />
+                {t(
+                  'خيارات إضافية (جدولة، لشخص آخر)',
+                  'More Options (Schedule, For Someone Else)'
+                )}
+              </button>
+
+              {/* عرض معلومات PreOrder إذا تم تعبئتها */}
+              {preOrderData.isScheduled && preOrderData.scheduledDate && (
+                <div className="p-3 rounded-xl glass">
+                  <p
+                    className="font-tajawal text-xs"
+                    style={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                  >
+                    📅 {t('مجدول', 'Scheduled')}:{' '}
+                    {preOrderData.scheduledDate} —{' '}
+                    {preOrderData.scheduledTime}
+                  </p>
+                </div>
+              )}
+
+              {preOrderData.isForOther &&
+                preOrderData.recipientName && (
+                  <div className="p-3 rounded-xl glass">
+                    <p
+                      className="font-tajawal text-xs"
+                      style={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                    >
+                      🎁 {t('لـ', 'For')}:{' '}
+                      {preOrderData.recipientName} —{' '}
+                      {preOrderData.recipientPhone}
+                    </p>
+                  </div>
+                )}
             </div>
           )}
 
-          {/* الخطوة 2 */}
+          {/* الخطوة 2: التوصيل */}
           {step === 1 && (
             <div className="space-y-4">
               <h2 className="font-ruqaa text-2xl text-gold-bright mb-4">
@@ -263,12 +358,18 @@ export default function CheckoutPage() {
               {[
                 {
                   title: t('توصيل سريع', 'Fast Delivery'),
-                  desc: t('خلال 30-45 دقيقة', 'Within 30-45 minutes'),
+                  desc: t(
+                    'خلال 30-45 دقيقة',
+                    'Within 30-45 minutes'
+                  ),
                   price: 3000,
                 },
                 {
                   title: t('توصيل مجدول', 'Scheduled Delivery'),
-                  desc: t('اختر الوقت المناسب', 'Choose your preferred time'),
+                  desc: t(
+                    'اختر الوقت المناسب',
+                    'Choose your preferred time'
+                  ),
                   price: 2000,
                 },
               ].map((opt, i) => (
@@ -304,7 +405,7 @@ export default function CheckoutPage() {
             </div>
           )}
 
-          {/* الخطوة 3 */}
+          {/* الخطوة 3: الدفع */}
           {step === 2 && (
             <div className="space-y-4">
               <h2 className="font-ruqaa text-2xl text-gold-bright mb-4">
@@ -320,7 +421,7 @@ export default function CheckoutPage() {
             </div>
           )}
 
-          {/* الخطوة 4 */}
+          {/* الخطوة 4: التأكيد */}
           {step === 3 && (
             <div>
               <h2 className="font-ruqaa text-2xl text-gold-bright mb-6">
@@ -383,8 +484,12 @@ export default function CheckoutPage() {
                         eventValue.type
                       )}
                     {eventValue.guests &&
-                      ` · ${eventValue.guests} ${t('شخص', 'guests')}`}
-                    {eventValue.urgent && ' · ⚡ ' + t('مستعجل', 'Urgent')}
+                      ` · ${eventValue.guests} ${t(
+                        'شخص',
+                        'guests'
+                      )}`}
+                    {eventValue.urgent &&
+                      ' · ⚡ ' + t('مستعجل', 'Urgent')}
                   </p>
                 </div>
               )}
@@ -406,19 +511,20 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {notesValue.hasAllergy && notesValue.allergyDetails && (
-                <div className="mb-4 p-4 rounded-xl border border-red-500/30 bg-red-500/5">
-                  <p className="font-tajawal text-xs text-red-400 mb-1">
-                    ⚠️ {t('تحذير حساسية', 'Allergy Warning')}:
-                  </p>
-                  <p
-                    className="font-tajawal text-sm"
-                    style={{ color: 'rgba(255, 255, 255, 0.95)' }}
-                  >
-                    {notesValue.allergyDetails}
-                  </p>
-                </div>
-              )}
+              {notesValue.hasAllergy &&
+                notesValue.allergyDetails && (
+                  <div className="mb-4 p-4 rounded-xl border border-red-500/30 bg-red-500/5">
+                    <p className="font-tajawal text-xs text-red-400 mb-1">
+                      ⚠️ {t('تحذير حساسية', 'Allergy Warning')}:
+                    </p>
+                    <p
+                      className="font-tajawal text-sm"
+                      style={{ color: 'rgba(255, 255, 255, 0.95)' }}
+                    >
+                      {notesValue.allergyDetails}
+                    </p>
+                  </div>
+                )}
 
               <div className="flex items-center justify-between p-4 rounded-xl gold-border">
                 <span
@@ -436,6 +542,7 @@ export default function CheckoutPage() {
         </motion.div>
       </AnimatePresence>
 
+      {/* أزرار التنقل */}
       <div className="flex items-center justify-between mt-8">
         {step > 0 ? (
           <button
@@ -451,7 +558,10 @@ export default function CheckoutPage() {
         <button
           onClick={handleNext}
           className="px-8 py-3.5 rounded-full font-tajawal font-bold relative overflow-hidden"
-          style={{ background: 'linear-gradient(135deg, #C9A227, #F5D76E)' }}
+          style={{
+            background:
+              'linear-gradient(135deg, #C9A227, #F5D76E)',
+          }}
         >
           <span className="relative z-10 text-emerald-deep flex items-center gap-2">
             {step === 3
@@ -462,6 +572,14 @@ export default function CheckoutPage() {
           <span className="absolute inset-0 shine-bg" />
         </button>
       </div>
+
+      {/* نافذة الخيارات الإضافية */}
+      <PreOrderModal
+        isOpen={preOrderOpen}
+        onClose={() => setPreOrderOpen(false)}
+        onSave={setPreOrderData}
+        initialData={preOrderData}
+      />
     </div>
   );
 }

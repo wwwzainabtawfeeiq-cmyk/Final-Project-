@@ -8,6 +8,7 @@ import AdminStats from '@/components/admin/AdminStats';
 import UsersManager from '@/components/admin/UsersManager';
 import AllOrdersManager from '@/components/admin/AllOrdersManager';
 import CooksManager from '@/components/admin/CooksManager';
+import AdminOverview from '@/components/admin/AdminOverview';
 
 type TabKey = 'overview' | 'users' | 'orders' | 'cooks';
 
@@ -100,37 +101,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* المحتوى */}
-      {tab === 'overview' && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl p-8 text-center"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(15, 36, 25, 0.8), rgba(27, 67, 50, 0.5))',
-            border: '1px solid rgba(201, 162, 39, 0.2)',
-          }}
-        >
-          <LayoutDashboard
-            size={64}
-            className="mx-auto mb-4"
-            style={{ color: 'rgba(201, 162, 39, 0.4)' }}
-          />
-          <h2 className="font-ruqaa text-2xl text-gradient-gold mb-2">
-            {t('نظرة عامة', 'Overview')}
-          </h2>
-          <p
-            className="font-tajawal"
-            style={{ color: 'rgba(255, 255, 255, 0.6)' }}
-          >
-            {t(
-              'اختر تبويبًا من الأعلى لعرض التفاصيل',
-              'Choose a tab above to view details'
-            )}
-          </p>
-        </motion.div>
-      )}
-
+      {tab === 'overview' && <AdminOverview />}
       {tab === 'users' && <UsersManager />}
       {tab === 'orders' && <AllOrdersManager />}
       {tab === 'cooks' && <CooksManager />}
