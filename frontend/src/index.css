@@ -1,169 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700&family=Cairo:wght@300;400;600;700&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ===== RTL / LTR اتجاه ===== */
 html {
-  scroll-behavior: smooth;
+  direction: rtl;
 }
 
 body {
-  font-family: 'Tajawal', sans-serif;
-  background-color: #0F2419;
+  font-family: Cairo, sans-serif;
+  background: #0A0A0A;
   color: #FAF6ED;
-  overflow-x: hidden;
 }
 
-/* تمرير مخصص */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #0F2419;
-}
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #C9A227, #F5D76E);
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #F5D76E, #C9A227);
-}
-
-/* ===== Utilities مخصصة ===== */
-@layer utilities {
-  /* زجاجي فاخر */
-  .glass {
-    background: rgba(15, 36, 25, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(201, 162, 39, 0.2);
-  }
-  .glass-light {
-    background: rgba(250, 246, 237, 0.08);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(201, 162, 39, 0.25);
-  }
-
-  /* حدود ذهبية متدرجة */
-  .gold-border {
-    border: 1px solid transparent;
-    background-image: linear-gradient(#0F2419, #0F2419), linear-gradient(135deg, #C9A227, #F5D76E, #C9A227);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-  }
-
-  /* توهج ذهبي */
-  .gold-glow {
-    box-shadow: 0 0 20px rgba(201, 162, 39, 0.4), 0 0 40px rgba(201, 162, 39, 0.15);
-  }
-  .gold-glow-strong {
-    box-shadow: 0 0 30px rgba(201, 162, 39, 0.6), 0 0 60px rgba(201, 162, 39, 0.3), 0 0 90px rgba(245, 215, 110, 0.15);
-  }
-
-  /* نص ذهبي متوهج */
-  .text-glow-gold {
-    text-shadow: 0 0 20px rgba(201, 162, 39, 0.5), 0 0 40px rgba(201, 162, 39, 0.3);
-  }
-
-  /* تدرج ذهبي للنص */
-  .text-gradient-gold {
-    background: linear-gradient(135deg, #C9A227 0%, #F5D76E 50%, #C9A227 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-  }
-
-  /* تأثير لمعان للأزرار */
-  .shine-bg {
-    background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.3) 50%, transparent 75%);
-    background-size: 200% 100%;
-    animation: shine 3s ease-in-out infinite;
-  }
-
-  /* Skeleton shimmer */
-  .skeleton {
-    background: linear-gradient(90deg, rgba(201,162,39,0.05) 25%, rgba(201,162,39,0.15) 50%, rgba(201,162,39,0.05) 75%);
-    background-size: 1000px 100%;
-    animation: shimmer 2s linear infinite;
-  }
-
-  /* إخفاء المؤشر الافتراضي للمؤشر المخصص */
-  .custom-cursor-active * {
-    cursor: none !important;
-  }
-}
-
-/* خط مضغوط للعناوين */
 .font-ruqaa {
-  font-family: 'Aref Ruqaa', serif !important;
-  /* ===== حقول الإدخال ===== */
-input,
-textarea,
-select {
-  color: #FAF6ED !important;
-  background-color: rgba(15, 36, 25, 0.6) !important;
-  border-color: rgba(201, 162, 39, 0.3) !important;
-  caret-color: #F5D76E !important;
-  font-family: 'Tajawal', sans-serif !important;
+  font-family: "Aref Ruqaa", serif;
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: rgba(250, 246, 237, 0.4) !important;
+.font-tajawal {
+  font-family: Tajawal, sans-serif;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #F5D76E !important;
-  outline: none !important;
-  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2) !important;
-  background-color: rgba(15, 36, 25, 0.8) !important;
-}
-
-/* إصلاح حقول التاريخ والوقت */
-input[type="date"],
-input[type="time"],
-input[type="number"] {
-  color-scheme: dark;
-}
-
-/* إصلاح select */
-select option {
-  background-color: #0F2419;
-  color: #FAF6ED;
-}
-}
-/* ===== Placeholders ===== */
-input::placeholder,
-textarea::placeholder {
-  color: rgba(250, 246, 237, 0.4) !important;
-  font-family: 'Tajawal', sans-serif !important;
-}
-
-input:focus::placeholder,
-textarea:focus::placeholder {
-  color: rgba(250, 246, 237, 0.6) !important;
-}
-
-/* ===== حقول الإدخال العامة ===== */
-input:not([type="checkbox"]):not([type="radio"]),
-textarea {
-  color: #FFFFFF !important;
-  background-color: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(201, 162, 39, 0.35) !important;
-  caret-color: #F5D76E !important;
-  font-family: 'Tajawal', sans-serif !important;
-}
-
-input:not([type="checkbox"]):not([type="radio"]):focus,
-textarea:focus {
-  border-color: #F5D76E !important;
-  box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.2) !important;
-  background-color: rgba(255, 255, 255, 0.12) !important;
-  outline: none !important;
+.font-cairo {
+  font-family: Cairo, sans-serif;
 }

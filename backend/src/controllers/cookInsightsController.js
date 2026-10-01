@@ -7,11 +7,11 @@ const getCookInsights = async (req, res) => {
         const statisticsResult = await pool.query(`
             SELECT
                 COUNT(DISTINCT o.id) AS total_orders,
-                COUNT(DISTINCT o.id) FILTER (WHERE o.status = 'completed') AS completed_orders,
+                COUNT(DISTINCT o.id) FILTER (WHERE o.status = 'delivered') AS completed_orders,
                 COUNT(DISTINCT o.id) FILTER (WHERE o.status = 'cancelled') AS cancelled_orders,
                 COALESCE(
                     SUM(oi.quantity * oi.price)
-                    FILTER (WHERE o.status = 'completed'),
+                    FILTER (WHERE o.status = 'delivered'),
                     0
                 ) AS total_sales,
                 COALESCE(AVG(r.rating), 0) AS average_rating
@@ -44,7 +44,7 @@ const getCookInsights = async (req, res) => {
             LEFT JOIN order_items oi ON oi.meal_id = m.id
             LEFT JOIN orders o
                 ON o.id = oi.order_id
-                AND o.status = 'completed'
+                AND o.status = 'delivered'
             WHERE m.cook_id = $1
             GROUP BY m.id, m.name
             ORDER BY sold_quantity DESC, sales DESC
@@ -119,3 +119,4 @@ const getCookInsights = async (req, res) => {
 module.exports = {
     getCookInsights
 };
+

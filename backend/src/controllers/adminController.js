@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+﻿const pool = require("../config/db");
 
 const getUsers = async (req, res) => {
     try {
@@ -155,9 +155,58 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const getAllOrders = async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT
+                o.id,
+                o.customer_id,
+                o.chef_id,
+                o.address_id,
+                o.total_amount,
+                o.status,
+                o.scheduled_at,
+                o.created_at,
+                o.notes,
+                o.order_type,
+                customer.name AS customer_name,
+                customer.email AS customer_email,
+                cook.name AS cook_name,
+                COUNT(oi.id)::int AS items_count
+            FROM orders o
+            JOIN users customer
+                ON customer.id = o.customer_id
+            LEFT JOIN users cook
+                ON cook.id = o.chef_id
+            LEFT JOIN order_items oi
+                ON oi.order_id = o.id
+            GROUP BY
+                o.id,
+                customer.name,
+                customer.email,
+                cook.name
+            ORDER BY o.created_at DESC
+        `);
+
+        res.json({
+            success: true,
+            data: result.rows
+        });
+
+    } catch (error) {
+        console.error("Admin get all orders error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Server error"
+        });
+    }
+};
+
 module.exports = {
     getUsers,
     getUserById,
     updateUserRole,
-    deleteUser
+    deleteUser,
+    getAllOrders
 };

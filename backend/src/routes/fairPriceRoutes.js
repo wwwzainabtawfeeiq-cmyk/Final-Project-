@@ -1,17 +1,23 @@
 ﻿const express = require("express");
-
-const {
-    calculateFairPrice
-} = require("../controllers/fairPriceController");
-
-const {
-    setMealCost
-} = require("../controllers/mealCostController");
-
 const router = express.Router();
 
-router.post("/meal/:mealId", setMealCost);
+const { calculateFairPrice } = require("../controllers/fairPriceController");
+const { setMealCost } = require("../controllers/mealCostController");
+const { authenticateToken, authorizeRoles } = require("../middleware/authMiddleware");
 
-router.get("/meal/:mealId", calculateFairPrice);
+// ضبط تكلفة الوجبة: متاح للطباخ والأدمن فقط
+router.post(
+  "/meal/:mealId",
+  authenticateToken,
+  authorizeRoles("cook", "admin"),
+  setMealCost
+);
+
+// حساب السعر العادل: يتطلب توثيق المستخدم
+router.get(
+  "/meal/:mealId",
+  authenticateToken,
+  calculateFairPrice
+);
 
 module.exports = router;

@@ -6,6 +6,21 @@ const keywordMap = {
     "بيتوتي": ["homemade"],
     "منزلي": ["homemade"],
     "رز": ["rice"],
+    "أرز": ["rice"],
+    "ارز": ["rice"],
+    "برياني": ["biryani"],
+    "بريانيه": ["biryani"],
+    "كباب": ["kebab", "grilled", "meat"],
+    "سمك": ["fish"],
+    "سمچ": ["fish"],
+    "دجاج": ["chicken"],
+    "لحم": ["meat", "lamb", "beef"],
+    "غنم": ["lamb"],
+    "خبز": ["bread"],
+    "خضار": ["vegetable", "vegetables", "vegetarian"],
+    "حلو": ["sweet", "dessert"],
+    "حلويات": ["sweet", "dessert"],
+    "حار": ["spicy", "hot"],
     "تقليدي": ["traditional"]
 };
 
@@ -25,9 +40,11 @@ const smartSearch = async (req, res) => {
         const expandedKeywords = [];
 
         parsed.keywords.forEach(keyword => {
-            expandedKeywords.push(normalize(keyword));
+            const normalizedKeyword = normalize(keyword);
 
-            const mapped = keywordMap[normalize(keyword)] || [];
+            expandedKeywords.push(normalizedKeyword);
+
+            const mapped = keywordMap[normalizedKeyword] || [];
             expandedKeywords.push(...mapped);
         });
 
@@ -91,6 +108,4 @@ const smartSearch = async (req, res) => {
     }
 };
 
-module.exports = {
-    smartSearch
-};
+module.exports = { smartSearch };

@@ -1,4 +1,22 @@
-node_modules/
+﻿node_modules/
 .env
 dist/
 .vite/
+
+# Local backups
+frontend_backup_*/
+
+# Local logs
+*.log
+
+# Temporary repair scripts
+backend/auto_fix.js
+backend/fix.js
+backend/repair.js
+backend/seed_part3.cjs
+backend/start-runtime.cjs
+
+# Temporary backup files
+*.bak
+
+*.backup.*

@@ -11,6 +11,7 @@ const publicMealRoutes = require("./routes/publicMealRoutes");
 const recommendationRoutes = require("./routes/recommendationRoutes");
 const flavorMatchRoutes = require("./routes/flavorMatchRoutes");
 const express = require("express");
+const path = require("path");
 const cookInsightsRoutes = require("./routes/cookInsightsRoutes");
 const publicCookRoutes = require("./routes/publicCookRoutes");
 const fairPriceRoutes = require("./routes/fairPriceRoutes");
@@ -23,6 +24,7 @@ const pool = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const cookRoutes = require("./routes/cookRoutes");
 const mealRoutes = require("./routes/mealRoutes");
+const categoryRoutes = require("./routes/categoryRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
@@ -40,11 +42,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.json({
-        message: "BasraFlavor API is running"
-    });
-});
 
 app.get("/api/test-db", async (req, res) => {
     try {
@@ -73,6 +70,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/cook", cookRoutes);
 app.use("/api/admin-insights", adminInsightsRoutes);
 app.use("/api/meals", mealRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/notifications", notificationRoutes);
@@ -111,7 +109,16 @@ app.use((err, req, res, next) => {
     });
 });
 
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+
 module.exports = app;
+
+
+
+
+
 
 
 

@@ -1,8 +1,9 @@
-const express = require("express");
+﻿const express = require("express");
 
 const {
     getUsers,
     getUserById,
+    getAllOrders,
     updateUserRole,
     deleteUser
 } = require("../controllers/adminController");
@@ -13,6 +14,13 @@ const {
 } = require("../middleware/authMiddleware");
 
 const router = express.Router();
+
+router.get(
+    "/orders",
+    authenticateToken,
+    authorizeRoles("admin"),
+    getAllOrders
+);
 
 router.get(
     "/users",
@@ -43,3 +51,4 @@ router.delete(
 );
 
 module.exports = router;
+
